@@ -1,0 +1,10 @@
+name: mathematics
+version: 0.0.1
+author: Valor Zhong <valorzhong@gmail.com>
+description: for my mathematics learning
+homepage: https://github.com/games/mathematics
+documentation: https://github.com/games/mathematics
+
+dependencies:
+  browser: any
+  unittest: any
