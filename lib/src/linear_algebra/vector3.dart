@@ -28,7 +28,7 @@ class Vector3 {
   }
   
   double get length {
-    return Math.sqrt(lengthSquared);
+    return math.sqrt(lengthSquared);
   }
   
   double get lengthSquared {
