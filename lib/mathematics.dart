@@ -13,6 +13,8 @@ import 'dart:async';
 
 part 'src/webgl/disposable.dart';
 
+part 'src/webgl/stage.dart';
+
 part 'src/webgl/component/component.dart';
 part 'src/webgl/component/scene_manager.dart';
 
