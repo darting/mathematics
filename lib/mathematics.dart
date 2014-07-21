@@ -17,6 +17,7 @@ part 'src/webgl/stage.dart';
 
 part 'src/webgl/component/component.dart';
 part 'src/webgl/component/scene_manager.dart';
+part 'src/webgl/component/perspective_camera.dart';
 
 part 'src/webgl/scene/node.dart';
 
@@ -26,6 +27,7 @@ part 'src/webgl/math/matrix4.dart';
 part 'src/webgl/math/vector3.dart';
 part 'src/webgl/math/vector4.dart';
 part 'src/webgl/math/color.dart';
+part 'src/webgl/math/ray.dart';
 
 part 'src/webgl/texture/texture.dart';
 part 'src/webgl/texture/sampler.dart';
@@ -33,3 +35,8 @@ part 'src/webgl/texture/sampler.dart';
 part 'src/webgl/render/graphics_device.dart';
 part 'src/webgl/render/program.dart';
 part 'src/webgl/render/vertex_buffer.dart';
+
+
+typedef void Callback();
+typedef void Callback1<T>();
+typedef void Callback2<T1, T2>();
