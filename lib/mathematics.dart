@@ -24,6 +24,7 @@ part 'src/webgl/scene/node.dart';
 part 'src/webgl/geometry/geometry.dart';
 
 part 'src/webgl/math/matrix4.dart';
+part 'src/webgl/math/quaternion.dart';
 part 'src/webgl/math/vector3.dart';
 part 'src/webgl/math/vector4.dart';
 part 'src/webgl/math/color.dart';
@@ -33,8 +34,13 @@ part 'src/webgl/texture/texture.dart';
 part 'src/webgl/texture/sampler.dart';
 
 part 'src/webgl/render/graphics_device.dart';
+part 'src/webgl/render/resource.dart';
 part 'src/webgl/render/program.dart';
 part 'src/webgl/render/vertex_buffer.dart';
+part 'src/webgl/render/draw_call.dart';
+
+part 'src/webgl/event/event_stream.dart';
+part 'src/webgl/event/event_trigger.dart';
 
 
 typedef void Callback();

@@ -39,8 +39,42 @@ class Stage {
     _elapsedTime = highResTime;
     _deltaTime = delta;
     
+    // game logic
     if(enterFrame != null) enterFrame();
     
+    // physics
+    // shadows
+    // octree
+    // prepare
+    // render to target
+    // render to stage
+    // bounding box
+    // particles
+    // clear
     
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
