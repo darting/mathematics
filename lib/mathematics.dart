@@ -14,12 +14,16 @@ import 'dart:async';
 part 'src/webgl/disposable.dart';
 
 part 'src/webgl/stage.dart';
+part 'src/webgl/assets.dart';
 
 part 'src/webgl/component/component.dart';
+part 'src/webgl/component/renderer.dart';
 part 'src/webgl/component/scene_manager.dart';
 part 'src/webgl/component/perspective_camera.dart';
 
 part 'src/webgl/scene/node.dart';
+
+part 'src/webgl/component/mesh.dart';
 
 part 'src/webgl/geometry/geometry.dart';
 

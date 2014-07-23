@@ -54,7 +54,7 @@ class GraphicsDevice {
 
   // TODO
   // 0,0,0,0,1,0xffffff
-  void clear(double red, double green, double blue, double alpha, double depth, int stencil, int mask) {
+  void clear(double red, double green, double blue, double alpha, {double depth, int stencil, int mask}) {
     _ctx.clearColor(red, green, blue, alpha);
     _ctx.clearDepth(depth);
     _ctx.clearStencil(stencil);
@@ -82,7 +82,7 @@ class GraphicsDevice {
     }
   }
 
-  void present() {
+  void flush() {
     _ctx.flush();
   }
 

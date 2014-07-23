@@ -38,6 +38,7 @@ class Stage {
     final delta = highResTime - _elapsedTime;
     _elapsedTime = highResTime;
     _deltaTime = delta;
+    _fps = 1000.0 / delta;
     
     // game logic
     if(enterFrame != null) enterFrame();
