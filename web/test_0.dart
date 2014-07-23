@@ -23,7 +23,7 @@ void main() {
   var cube = new Node("cube");
   cube
       ..addComponent(new Transform())
-      ..addComponent(new MeshFilter(assets.getMesh("cube")))
+      ..addComponent(new MeshInstance(assets.getMesh("cube")))
       ..addComponent(new Renderer());
   root.addChild(cube);
   

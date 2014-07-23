@@ -22,7 +22,7 @@ part of mathematics;
  */
 class DrawCall {
 
-  void configure(Program program) {
+  void configure(Shader program) {
 
   }
 

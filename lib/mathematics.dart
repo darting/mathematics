@@ -23,16 +23,18 @@ part 'src/webgl/component/renderer.dart';
 part 'src/webgl/component/transform.dart';
 part 'src/webgl/scene_manager.dart';
 part 'src/webgl/component/perspective_camera.dart';
-part 'src/webgl/component/mesh_filter.dart';
+part 'src/webgl/component/mesh_instance.dart';
 
 part 'src/webgl/scene/node.dart';
 
 part 'src/webgl/geometry/geometry.dart';
 
 part 'src/webgl/material/material.dart';
+part 'src/webgl/material/basic_material.dart';
 
 part 'src/webgl/math/matrix4.dart';
 part 'src/webgl/math/quaternion.dart';
+part 'src/webgl/math/vector2.dart';
 part 'src/webgl/math/vector3.dart';
 part 'src/webgl/math/vector4.dart';
 part 'src/webgl/math/color.dart';
@@ -44,7 +46,9 @@ part 'src/webgl/texture/sampler.dart';
 
 part 'src/webgl/render/graphics_device.dart';
 part 'src/webgl/render/resource.dart';
-part 'src/webgl/render/program.dart';
+part 'src/webgl/render/shader.dart';
+part 'src/webgl/render/technique.dart';
+part 'src/webgl/render/pass.dart';
 part 'src/webgl/render/vertex_buffer.dart';
 part 'src/webgl/render/draw_call.dart';
 
@@ -55,3 +59,10 @@ part 'src/webgl/event/event_trigger.dart';
 typedef void Callback();
 typedef void Callback1<T>();
 typedef void Callback2<T1, T2>();
+
+
+
+void assertNotNull(target, String desc) {
+  if(target == null) throw new Exception(desc);
+}
+

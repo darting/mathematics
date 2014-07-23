@@ -5,21 +5,28 @@ part of mathematics;
 
 class Renderer extends Component {
 
-  Color _backgroundColor;
+  Color backgroundColor;
   BoundingInfo _bounds;
   bool castShadows;
   bool enabled;
   bool visible;
   int lightmapIndex;
   Vector4 lightmapTilingOffset;
-  Material material;
-  Material sharedMaterial;
+
+  Material get material => null;
+  Material get sharedMaterial => null;
   List<Material> materials;
   List<Material> sharedMaterials;
+
   bool receiveShadows;
-  
-  Renderer() {
-    _backgroundColor = Color.black();
+
+  Renderer({this.backgroundColor, Material material, this.sharedMaterials}) {
+    if (backgroundColor == null) backgroundColor = Color.black();
+    if (material == null && sharedMaterials == null) {
+      sharedMaterials = [new BasicMaterial()];
+    } else if (sharedMaterials == null) {
+      sharedMaterials = [material];
+    }
   }
 
   @override
@@ -35,28 +42,42 @@ class Renderer extends Component {
     // TODO: implement _targetRemoved
   }
 
-  void render([Texture renderTarget]) {
+  void render(GraphicsDevice graphics, [Texture renderTarget]) {
 
     // event
     // rendertarget
     
-    var graphics = Engine._sharedInstance._graphics;
+    assertNotNull(target, "target must be not null");
+    assertNotNull(target.meshInstance, "mesh instance must be not null");
+    assertNotNull(target.meshInstance.mesh, "mesh must be not null");
 
-    graphics.clear(_backgroundColor.red, _backgroundColor.green, _backgroundColor.blue, _backgroundColor.alpha);
-
-    List<DrawCall> drawCalls;
-
-    drawCalls.forEach((drawCall) {
-      drawCall.render(graphics, renderTarget);
-    });
     
-    graphics.flush();
+    var mesh = target.meshInstance.mesh;
     
+    
+    graphics.clear(backgroundColor.red, backgroundColor.green, backgroundColor.blue, backgroundColor.alpha);
+
+    // TODO get draw calls from pool ?
+    var material = sharedMaterials.first;
+    
+    if(material.ready(graphics, target)) {
+      graphics.use(material.technique.defaultPass);
+          
+      material.bind(graphics, target);
+      
+      mesh._subMeshes.forEach((subMesh) {
+        graphics.drawTriangles(subMesh._indices);
+      });
+
+      graphics.flush();
+    }
+
+    
+
     // event
 
   }
 }
-
 
 
 

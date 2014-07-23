@@ -52,6 +52,7 @@ class VertexBuffer extends Resource {
   
   VertexBuffer.indexData(Uint16List data) {
     _target = gl.ELEMENT_ARRAY_BUFFER;
+    _numVertices = data.length ~/ 3;
     _data = data;
     upload();
   }

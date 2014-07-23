@@ -48,7 +48,7 @@ class Mesh extends Resource {
     return result;
   }
 
-  void setIndices(int topology, int subMesh, data) {
+  void setIndices(data, {int subMesh: 0, int topology: gl.TRIANGLES}) {
     if (_subMeshes == null) _subMeshes = [];
     SubMesh sub;
     if (_subMeshes.length <= subMesh) {
@@ -61,6 +61,11 @@ class Mesh extends Resource {
       data = new VertexBuffer.indexData(data);
     }
     sub._indices = data;
+  }
+  
+  VertexBuffer getIndices([int subMesh = 0]) {
+    if(_subMeshes == null || _subMeshes.length >= subMesh) return null;
+    return _subMeshes[subMesh]._indices;
   }
 
 

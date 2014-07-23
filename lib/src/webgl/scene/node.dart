@@ -15,8 +15,8 @@ class Node extends EventTrigger {
   Renderer _renderer;
   Renderer get renderer => _renderer;
 
-  MeshFilter _meshFilter;
-  MeshFilter get meshFilter => _meshFilter;
+  MeshInstance _meshInstance;
+  MeshInstance get meshInstance => _meshInstance;
 
   Transform _transform;
   Transform get transform => _transform;
@@ -66,8 +66,8 @@ class Node extends EventTrigger {
   void _setSpecialComponent(Component component, value) {
     if (component is Renderer) {
       _renderer = value;
-    } else if (component is MeshFilter) {
-      _meshFilter = value;
+    } else if (component is MeshInstance) {
+      _meshInstance = value;
     } else if (component is Transform) {
       _transform = value;
     }
