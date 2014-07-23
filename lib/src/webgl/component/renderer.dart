@@ -12,6 +12,11 @@ class Renderer extends Component {
   }
 
   @override
+  void _initialize() {
+    // TODO: implement _initialize
+  }
+
+  @override
   void _targetAdded(Node target) {
     if (target._renderer != null) throw new Exception("There cannot be two Renderer on the same node.");
 

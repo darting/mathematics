@@ -33,8 +33,6 @@ class VertexAttribute {
   int offset;
 }
 
-
-
 class VertexBuffer extends Resource {
   gl.Buffer _buffer;
   TypedData _data;
@@ -45,21 +43,21 @@ class VertexBuffer extends Resource {
   int _vertexSize;
   int _numVertices = 0;
 
-  VertexBuffer(GraphicsDevice graphcisDevice) : super(graphcisDevice);
-
-  VertexBuffer.vertexData(GraphicsDevice graphicsDevice, this._data) : super(graphicsDevice) {
+  VertexBuffer.vertexData(Float32List data, this._vertexSize) {
     _target = gl.ARRAY_BUFFER;
+    _numVertices = data.length ~/ _vertexSize;
+    _data = data;
     upload();
   }
   
-  VertexBuffer.indexData(GraphicsDevice graphicsDevice, this._data) : super(graphicsDevice) {
+  VertexBuffer.indexData(Uint16List data) {
     _target = gl.ELEMENT_ARRAY_BUFFER;
+    _data = data;
     upload();
   }
 
-  @override
   void upload() {
-    var ctx = _graphcisDevice._ctx;
+    var ctx = graphicsDevice._ctx;
     if (_buffer == null) {
       _buffer = ctx.createBuffer();
     }
@@ -71,7 +69,7 @@ class VertexBuffer extends Resource {
   @override
   void dispose() {
     if (_buffer != null) {
-      _graphcisDevice._ctx.deleteBuffer(_buffer);
+      graphicsDevice._ctx.deleteBuffer(_buffer);
     }
     _ready = false;
     _buffer = null;

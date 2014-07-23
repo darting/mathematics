@@ -5,25 +5,13 @@ part of mathematics;
 
 class Color extends Vector4 {
 
-  Color(num r, num g, num b, [num alpha = 1.0]) {
-    _elements[0] = r.toDouble();
-    _elements[1] = g.toDouble();
-    _elements[2] = b.toDouble();
-    _elements[3] = alpha;
+  Color(double r, double g, double b, [double alpha = 1.0]) : super(r, g, b, alpha);
+
+  Color.fromList(List<num> list) : super.fromList(list) {
+    if (_elements[3] == 0.0) _elements[3] = 1.0;
   }
 
-  Color.fromList(List list) {
-    _elements[0] = list[0].toDouble();
-    _elements[1] = list[1].toDouble();
-    _elements[2] = list[2].toDouble();
-    if (list.length >= 4) {
-      _elements[3] = list[3].toDouble();
-    } else {
-      _elements[3] = 1.0;
-    }
-  }
-
-  Color.fromHex(num hex) {
+  Color.fromHex(num hex) : super.zero() {
     hexColor = hex;
   }
 

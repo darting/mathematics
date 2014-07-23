@@ -274,9 +274,9 @@ class Matrix4 {
 
   /**
      * Generates a look-at matrix with the given eye position, focal point, and up axis
-     * @param [Vector3] eye Position of the viewer
-     * @param [Vector3] center Point the viewer is looking at
-     * @param [Vector3] up vec3 pointing up
+     * [eye] Position of the viewer
+     * [center] Point the viewer is looking at
+     * [up] vec3 pointing up
      */
   Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) {
     var x0,
@@ -499,7 +499,7 @@ class Matrix4 {
       _elements[i] = matrix[i].toDouble();
     }
   }
-  
+
   /**
    * copy translation to [ref]
    */
@@ -514,4 +514,220 @@ class Matrix4 {
   void operator []=(int i, double v) {
     _elements[i] = v;
   }
+
+  Matrix4 _mul_scale(double arg) {
+    Matrix4 r = new Matrix4.zero();
+    r._elements[15] = _elements[15] * arg;
+    r._elements[14] = _elements[14] * arg;
+    r._elements[13] = _elements[13] * arg;
+    r._elements[12] = _elements[12] * arg;
+    r._elements[11] = _elements[11] * arg;
+    r._elements[10] = _elements[10] * arg;
+    r._elements[9] = _elements[9] * arg;
+    r._elements[8] = _elements[8] * arg;
+    r._elements[7] = _elements[7] * arg;
+    r._elements[6] = _elements[6] * arg;
+    r._elements[5] = _elements[5] * arg;
+    r._elements[4] = _elements[4] * arg;
+    r._elements[3] = _elements[3] * arg;
+    r._elements[2] = _elements[2] * arg;
+    r._elements[1] = _elements[1] * arg;
+    r._elements[0] = _elements[0] * arg;
+    return r;
+  }
+
+  Matrix4 _mul_matrix(Matrix4 arg) {
+    var r = new Matrix4.zero();
+    r._elements[0] = (_elements[0] * arg._elements[0]) + (_elements[4] * arg._elements[1]) + (_elements[8] * arg._elements[2]) + (_elements[12] * arg._elements[3]);
+    r._elements[4] = (_elements[0] * arg._elements[4]) + (_elements[4] * arg._elements[5]) + (_elements[8] * arg._elements[6]) + (_elements[12] * arg._elements[7]);
+    r._elements[8] = (_elements[0] * arg._elements[8]) + (_elements[4] * arg._elements[9]) + (_elements[8] * arg._elements[10]) + (_elements[12] * arg._elements[11]);
+    r._elements[12] = (_elements[0] * arg._elements[12]) + (_elements[4] * arg._elements[13]) + (_elements[8] * arg._elements[14]) + (_elements[12] * arg._elements[15]);
+    r._elements[1] = (_elements[1] * arg._elements[0]) + (_elements[5] * arg._elements[1]) + (_elements[9] * arg._elements[2]) + (_elements[13] * arg._elements[3]);
+    r._elements[5] = (_elements[1] * arg._elements[4]) + (_elements[5] * arg._elements[5]) + (_elements[9] * arg._elements[6]) + (_elements[13] * arg._elements[7]);
+    r._elements[9] = (_elements[1] * arg._elements[8]) + (_elements[5] * arg._elements[9]) + (_elements[9] * arg._elements[10]) + (_elements[13] * arg._elements[11]);
+    r._elements[13] = (_elements[1] * arg._elements[12]) + (_elements[5] * arg._elements[13]) + (_elements[9] * arg._elements[14]) + (_elements[13] * arg._elements[15]);
+    r._elements[2] = (_elements[2] * arg._elements[0]) + (_elements[6] * arg._elements[1]) + (_elements[10] * arg._elements[2]) + (_elements[14] * arg._elements[3]);
+    r._elements[6] = (_elements[2] * arg._elements[4]) + (_elements[6] * arg._elements[5]) + (_elements[10] * arg._elements[6]) + (_elements[14] * arg._elements[7]);
+    r._elements[10] = (_elements[2] * arg._elements[8]) + (_elements[6] * arg._elements[9]) + (_elements[10] * arg._elements[10]) + (_elements[14] * arg._elements[11]);
+    r._elements[14] = (_elements[2] * arg._elements[12]) + (_elements[6] * arg._elements[13]) + (_elements[10] * arg._elements[14]) + (_elements[14] * arg._elements[15]);
+    r._elements[3] = (_elements[3] * arg._elements[0]) + (_elements[7] * arg._elements[1]) + (_elements[11] * arg._elements[2]) + (_elements[15] * arg._elements[3]);
+    r._elements[7] = (_elements[3] * arg._elements[4]) + (_elements[7] * arg._elements[5]) + (_elements[11] * arg._elements[6]) + (_elements[15] * arg._elements[7]);
+    r._elements[11] = (_elements[3] * arg._elements[8]) + (_elements[7] * arg._elements[9]) + (_elements[11] * arg._elements[10]) + (_elements[15] * arg._elements[11]);
+    r._elements[15] = (_elements[3] * arg._elements[12]) + (_elements[7] * arg._elements[13]) + (_elements[11] * arg._elements[14]) + (_elements[15] * arg._elements[15]);
+    return r;
+  }
+
+  Vector4 _mul_vector(Vector4 arg) {
+    Vector4 r = new Vector4.zero();
+    r._elements[3] = (_elements[3] * arg._elements[0]) + (_elements[7] * arg._elements[1]) + (_elements[11] * arg._elements[2]) + (_elements[15] * arg._elements[3]);
+    r._elements[2] = (_elements[2] * arg._elements[0]) + (_elements[6] * arg._elements[1]) + (_elements[10] * arg._elements[2]) + (_elements[14] * arg._elements[3]);
+    r._elements[1] = (_elements[1] * arg._elements[0]) + (_elements[5] * arg._elements[1]) + (_elements[9] * arg._elements[2]) + (_elements[13] * arg._elements[3]);
+    r._elements[0] = (_elements[0] * arg._elements[0]) + (_elements[4] * arg._elements[1]) + (_elements[8] * arg._elements[2]) + (_elements[12] * arg._elements[3]);
+    return r;
+  }
+
+  Vector3 _mul_vector3(Vector3 arg) {
+    Vector3 r = new Vector3.zero();
+    r._elements[0] = (_elements[0] * arg._elements[0]) + (_elements[4] * arg._elements[1]) + (_elements[8] * arg._elements[2]) + _elements[12];
+    r._elements[1] = (_elements[1] * arg._elements[0]) + (_elements[5] * arg._elements[1]) + (_elements[9] * arg._elements[2]) + _elements[13];
+    r._elements[2] = (_elements[2] * arg._elements[0]) + (_elements[6] * arg._elements[1]) + (_elements[10] * arg._elements[2]) + _elements[14];
+    return r;
+  }
+
+  /// Returns a new vector or matrix by multiplying [this] with [arg].
+  dynamic operator *(dynamic arg) {
+    if (arg is num) {
+      return _mul_scale(arg.toDouble());
+    }
+    if (arg is Vector4) {
+      return _mul_vector(arg);
+    }
+    if (arg is Vector3) {
+      return _mul_vector3(arg);
+    }
+    if (4 == arg.dimension) {
+      return _mul_matrix(arg);
+    }
+    throw new ArgumentError(arg);
+  }
+
+  Matrix4 scale(x, [double y = null, double z = null]) {
+    double sx;
+    double sy;
+    double sz;
+    double sw = x is Vector4 ? x.w : 1.0;
+    if (x is Vector3 || x is Vector4) {
+      sx = x.x;
+      sy = x.y;
+      sz = x.z;
+    } else {
+      sx = x;
+      sy = y == null ? x : y.toDouble();
+      sz = z == null ? x : z.toDouble();
+    }
+    _elements[0] *= sx;
+    _elements[1] *= sx;
+    _elements[2] *= sx;
+    _elements[3] *= sx;
+    _elements[4] *= sy;
+    _elements[5] *= sy;
+    _elements[6] *= sy;
+    _elements[7] *= sy;
+    _elements[8] *= sz;
+    _elements[9] *= sz;
+    _elements[10] *= sz;
+    _elements[11] *= sz;
+    _elements[12] *= sw;
+    _elements[13] *= sw;
+    _elements[14] *= sw;
+    _elements[15] *= sw;
+    return this;
+  }
+
+  Matrix4 setTranslation(Vector3 v) {
+    double x = v._elements[0];
+    double y = v._elements[1];
+    double z = v._elements[2];
+    _elements[12] = x;
+    _elements[13] = y;
+    _elements[14] = z;
+    return this;
+  }
+
+  void multiply(Matrix4 m) {
+    final double m00 = _elements[0];
+    final double m01 = _elements[4];
+    final double m02 = _elements[8];
+    final double m03 = _elements[12];
+    final double m10 = _elements[1];
+    final double m11 = _elements[5];
+    final double m12 = _elements[9];
+    final double m13 = _elements[13];
+    final double m20 = _elements[2];
+    final double m21 = _elements[6];
+    final double m22 = _elements[10];
+    final double m23 = _elements[14];
+    final double m30 = _elements[3];
+    final double m31 = _elements[7];
+    final double m32 = _elements[11];
+    final double m33 = _elements[15];
+    final double n00 = m._elements[0];
+    final double n01 = m._elements[4];
+    final double n02 = m._elements[8];
+    final double n03 = m._elements[12];
+    final double n10 = m._elements[1];
+    final double n11 = m._elements[5];
+    final double n12 = m._elements[9];
+    final double n13 = m._elements[13];
+    final double n20 = m._elements[2];
+    final double n21 = m._elements[6];
+    final double n22 = m._elements[10];
+    final double n23 = m._elements[14];
+    final double n30 = m._elements[3];
+    final double n31 = m._elements[7];
+    final double n32 = m._elements[11];
+    final double n33 = m._elements[15];
+    _elements[0] = (m00 * n00) + (m01 * n10) + (m02 * n20) + (m03 * n30);
+    _elements[4] = (m00 * n01) + (m01 * n11) + (m02 * n21) + (m03 * n31);
+    _elements[8] = (m00 * n02) + (m01 * n12) + (m02 * n22) + (m03 * n32);
+    _elements[12] = (m00 * n03) + (m01 * n13) + (m02 * n23) + (m03 * n33);
+    _elements[1] = (m10 * n00) + (m11 * n10) + (m12 * n20) + (m13 * n30);
+    _elements[5] = (m10 * n01) + (m11 * n11) + (m12 * n21) + (m13 * n31);
+    _elements[9] = (m10 * n02) + (m11 * n12) + (m12 * n22) + (m13 * n32);
+    _elements[13] = (m10 * n03) + (m11 * n13) + (m12 * n23) + (m13 * n33);
+    _elements[2] = (m20 * n00) + (m21 * n10) + (m22 * n20) + (m23 * n30);
+    _elements[6] = (m20 * n01) + (m21 * n11) + (m22 * n21) + (m23 * n31);
+    _elements[10] = (m20 * n02) + (m21 * n12) + (m22 * n22) + (m23 * n32);
+    _elements[14] = (m20 * n03) + (m21 * n13) + (m22 * n23) + (m23 * n33);
+    _elements[3] = (m30 * n00) + (m31 * n10) + (m32 * n20) + (m33 * n30);
+    _elements[7] = (m30 * n01) + (m31 * n11) + (m32 * n21) + (m33 * n31);
+    _elements[11] = (m30 * n02) + (m31 * n12) + (m32 * n22) + (m33 * n32);
+    _elements[15] = (m30 * n03) + (m31 * n13) + (m32 * n23) + (m33 * n33);
+  }
+
+  void decompose(Vector3 position, Quaternion rotation, [Vector3 scaling]) {
+    position[0] = _elements[12];
+    position[1] = _elements[13];
+    position[2] = _elements[14];
+
+    var xs, ys, zs;
+    if ((_elements[0] * _elements[1] * _elements[2] * _elements[3]) < 0) {
+      xs = -1.0;
+    } else {
+      xs = 1.0;
+    }
+
+    if ((_elements[4] * _elements[5] * _elements[6] * _elements[7]) < 0) {
+      ys = -1.0;
+    } else {
+      ys = 1.0;
+    }
+
+    if ((_elements[8] * _elements[9] * _elements[10] * _elements[11]) < 0) {
+      zs = -1.0;
+    } else {
+      zs = 1.0;
+    }
+    xs = ys = zs = 1.0;
+
+    if (scaling == null) {
+      scaling = new Vector3.zero();
+    }
+
+    scaling[0] = xs * math.sqrt(_elements[0] * _elements[0] + _elements[1] * _elements[1] + _elements[2] * _elements[2]);
+    scaling[1] = ys * math.sqrt(_elements[4] * _elements[4] + _elements[5] * _elements[5] + _elements[6] * _elements[6]);
+    scaling[2] = zs * math.sqrt(_elements[8] * _elements[8] + _elements[9] * _elements[9] + _elements[10] * _elements[10]);
+
+    if (scaling.x == 0.0 || scaling.y == 0.0 || scaling.z == 0.0) {
+      rotation._elements[0] = 0.0;
+      rotation._elements[1] = 0.0;
+      rotation._elements[2] = 0.0;
+      rotation._elements[3] = 1.0;
+    } else {
+      rotation.setFromRotation(new Matrix4(_elements[0] / scaling.x, _elements[1] / scaling.x, _elements[2] / scaling.x, 0.0, _elements[4] / scaling.y, _elements[5] / scaling.y, _elements[6] / scaling.y, 0.0, _elements[8] / scaling.z, _elements[9] / scaling.z, _elements[10] / scaling.z, 0.0, 0.0, 0.0, 0.0, 1.0));
+    }
+  }
+
+  Matrix4 recompose(Vector3 position, Quaternion rotation, Vector3 scaling) => fromQuaternion(rotation).scale(scaling).setTranslation(position);
+
 }

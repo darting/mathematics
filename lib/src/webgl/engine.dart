@@ -6,23 +6,31 @@ part of mathematics;
 typedef enterFrame();
 
 
-class Stage {
+class Engine {
 
+  static Engine _sharedInstance;
+
+  num _totalTime = 0.0;
   num _elapsedTime = 0.0;
-  num _deltaTime = 0.0;
   num _fps = 60;
-  
+
+  num get totalTime => _totalTime;
   num get elapsedTime => _elapsedTime;
-  num get deltaTime => _deltaTime;
   num get fps => _fps;
-  
+
   GraphicsDevice _graphics;
   num _sourceWidth;
   num _sourceHeight;
-  
+
   Callback enterFrame;
-  
-  Stage(html.CanvasElement canvas) {
+  Callback exitFrame;
+
+  factory Engine(html.CanvasElement canvas) {
+    if (_sharedInstance == null) _sharedInstance = new Engine._(canvas);
+    return _sharedInstance;
+  }
+
+  Engine._(html.CanvasElement canvas) {
     _graphics = new GraphicsDevice(canvas);
     _sourceWidth = canvas.width;
     _sourceHeight = canvas.height;
@@ -35,14 +43,16 @@ class Stage {
   void _animate(num highResTime) {
     run();
 
-    final delta = highResTime - _elapsedTime;
-    _elapsedTime = highResTime;
-    _deltaTime = delta;
+    final delta = highResTime - _totalTime;
+    _totalTime = highResTime;
+    _elapsedTime = delta;
     _fps = 1000.0 / delta;
-    
-    // game logic
-    if(enterFrame != null) enterFrame();
-    
+
+    if (enterFrame != null) enterFrame();
+
+
+
+
     // physics
     // shadows
     // octree
@@ -52,12 +62,10 @@ class Stage {
     // bounding box
     // particles
     // clear
-    
+
+    if (exitFrame != null) exitFrame();
   }
 }
-
-
-
 
 
 

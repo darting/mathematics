@@ -21,14 +21,14 @@ class PerspectiveCamera extends Component {
     _near = near;
     _far = far;
     _postProjection = postProjection;
-    initialize();
+    _initialize();
   }
 
-  void initialize() {
+  void _initialize() {
     _view = new Matrix4.zero();
     _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
     _viewProjection = _projection.clone();
-    _position = new Vector3();
+    _position = new Vector3.zero();
   }
 
   void set fieldOfView(double fov) {
@@ -66,7 +66,7 @@ class PerspectiveCamera extends Component {
 
   }
 
-  void updateMatrices(Matrix4 world) {
+  void updateMatrix(Matrix4 world) {
     _view.copyForm(world);
     _view.copyTranslation(_position);
     _view.invert();
