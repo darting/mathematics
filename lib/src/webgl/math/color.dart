@@ -44,4 +44,7 @@ class Color extends Vector4 {
   double get blue => _elements[2];
   double get alpha => _elements[3];
 
+  
+  static Color white() => new Color(1.0, 1.0, 1.0);
+  static Color black() => new Color(0.0, 0.0, 0.0);
 }

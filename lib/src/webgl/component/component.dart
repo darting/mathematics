@@ -7,12 +7,14 @@ abstract class Component implements Disposable {
 
   String id;
 
+  Component([String id]) {
+    this.id = id;
+  }
+  
   List<Node> _targets = [];
   List<Node> get targets => _targets;
   Node getTarget(int i) => _targets[i];
   Node get target => _targets.first;
-
-  void _initialize() {}
 
   bool _enable = true;
   void set enable(bool val) {

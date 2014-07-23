@@ -10,6 +10,9 @@ class Engine {
 
   static Engine _sharedInstance;
 
+  final SceneManager sceneManager;
+  final Assets assets;
+
   num _totalTime = 0.0;
   num _elapsedTime = 0.0;
   num _fps = 60;
@@ -30,10 +33,14 @@ class Engine {
     return _sharedInstance;
   }
 
-  Engine._(html.CanvasElement canvas) {
+  Engine._(html.CanvasElement canvas)
+      : sceneManager = new SceneManager(),
+        assets = new Assets() {
+    
     _graphics = new GraphicsDevice(canvas);
     _sourceWidth = canvas.width;
     _sourceHeight = canvas.height;
+    
     // TODO resize
     // TODO context lose
   }
@@ -50,9 +57,6 @@ class Engine {
 
     if (enterFrame != null) enterFrame();
 
-
-
-
     // physics
     // shadows
     // octree
@@ -62,12 +66,11 @@ class Engine {
     // bounding box
     // particles
     // clear
+    sceneManager.update();
 
     if (exitFrame != null) exitFrame();
   }
 }
-
-
 
 
 

@@ -6,14 +6,20 @@ part of mathematics;
 class Renderer extends Component {
 
   Color _backgroundColor;
-
-  Renderer(this._backgroundColor) {
-
-  }
-
-  @override
-  void _initialize() {
-    // TODO: implement _initialize
+  BoundingInfo _bounds;
+  bool castShadows;
+  bool enabled;
+  bool visible;
+  int lightmapIndex;
+  Vector4 lightmapTilingOffset;
+  Material material;
+  Material sharedMaterial;
+  List<Material> materials;
+  List<Material> sharedMaterials;
+  bool receiveShadows;
+  
+  Renderer() {
+    _backgroundColor = Color.black();
   }
 
   @override
@@ -29,10 +35,12 @@ class Renderer extends Component {
     // TODO: implement _targetRemoved
   }
 
-  void render(GraphicsDevice graphics, Texture renderTarget) {
+  void render([Texture renderTarget]) {
 
     // event
     // rendertarget
+    
+    var graphics = Engine._sharedInstance._graphics;
 
     graphics.clear(_backgroundColor.red, _backgroundColor.green, _backgroundColor.blue, _backgroundColor.alpha);
 

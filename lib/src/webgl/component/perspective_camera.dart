@@ -21,10 +21,7 @@ class PerspectiveCamera extends Component {
     _near = near;
     _far = far;
     _postProjection = postProjection;
-    _initialize();
-  }
-
-  void _initialize() {
+    
     _view = new Matrix4.zero();
     _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
     _viewProjection = _projection.clone();

@@ -12,8 +12,7 @@ class Transform extends Component {
   Matrix4 worldMatrix;
   bool _dirty;
 
-  @override
-  void _initialize() {
+  Transform() {
     _position = new Vector3.zero();
     _worldPosition = new Vector3.zero();
     _scaling = new Vector3.all(1.0);

@@ -3,7 +3,10 @@ part of mathematics;
 
 
 
-class Mesh {
+class Mesh extends Resource {
+
+  Mesh(String id) : super(id);
+
   int _numVertices = 0;
   int get numVertices => _numVertices;
 
@@ -67,6 +70,11 @@ class Mesh {
 
   void computeTangentSpace([bool normals]) {
 
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
   }
 }
 
