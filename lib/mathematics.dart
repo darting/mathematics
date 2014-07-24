@@ -14,6 +14,7 @@ import 'dart:async';
 part 'src/webgl/disposable.dart';
 
 part 'src/webgl/engine.dart';
+part 'src/webgl/scene_manager.dart';
 part 'src/webgl/assets.dart';
 part 'src/webgl/mesh.dart';
 
@@ -21,7 +22,6 @@ part 'src/webgl/component/component.dart';
 part 'src/webgl/component/camera.dart';
 part 'src/webgl/component/renderer.dart';
 part 'src/webgl/component/transform.dart';
-part 'src/webgl/scene_manager.dart';
 part 'src/webgl/component/perspective_camera.dart';
 part 'src/webgl/component/mesh_instance.dart';
 
@@ -42,6 +42,7 @@ part 'src/webgl/math/ray.dart';
 part 'src/webgl/math/bounding_info.dart';
 
 part 'src/webgl/texture/texture.dart';
+part 'src/webgl/texture/render_target_texture.dart';
 part 'src/webgl/texture/sampler.dart';
 
 part 'src/webgl/render/graphics_device.dart';
@@ -56,13 +57,43 @@ part 'src/webgl/event/event_stream.dart';
 part 'src/webgl/event/event_trigger.dart';
 
 
+
+
 typedef void Callback();
 typedef void Callback1<T>();
 typedef void Callback2<T1, T2>();
 
 
 
+final Vector3 WORLD_LEFT = new Vector3(1.0, 0.0, 0.0);
+final Vector3 WORLD_UP = new Vector3(0.0, 1.0, 0.0);
+final Vector3 WORLD_FRONT = new Vector3(0.0, 0.0, 1.0);
+
+
+
 void assertNotNull(target, String desc) {
   if(target == null) throw new Exception(desc);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

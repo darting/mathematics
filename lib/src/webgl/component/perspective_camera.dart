@@ -3,17 +3,12 @@ part of mathematics;
 
 
 
-class PerspectiveCamera extends Component {
+class PerspectiveCamera extends Camera {
   double _fov;
   double _aspect;
   double _near;
   double _far;
 
-  Matrix4 _view;
-  Matrix4 _projection;
-  Matrix4 _viewProjection;
-
-  Vector3 _position;
   Matrix4 _postProjection;
 
   PerspectiveCamera(this._aspect, {double fov: 0.785, double near: 0.1, double far: 1000.0, Matrix4 postProjection}) {
@@ -21,11 +16,7 @@ class PerspectiveCamera extends Component {
     _near = near;
     _far = far;
     _postProjection = postProjection;
-    
-    _view = new Matrix4.zero();
-    _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
-    _viewProjection = _projection.clone();
-    _position = new Vector3.zero();
+    updateProjection();
   }
 
   void set fieldOfView(double fov) {
@@ -57,19 +48,19 @@ class PerspectiveCamera extends Component {
   }
 
   void updateProjection() {
+    _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
+    _viewProjection = _projection * _view;
   }
 
-  void unproject(double x, double y, Ray ref) {
 
-  }
 
-  void updateMatrix(Matrix4 world) {
-    _view.copyForm(world);
-    _view.copyTranslation(_position);
-    _view.invert();
-    updateProjection();
-  }
-  
+
+
+
+
+
+
+
   StreamSubscription _worldMatrixChanged;
 
   @override
@@ -85,4 +76,3 @@ class PerspectiveCamera extends Component {
     _worldMatrixChanged = null;
   }
 }
-

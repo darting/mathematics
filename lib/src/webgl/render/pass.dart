@@ -30,7 +30,7 @@ class Pass {
   void bind(GraphicsDevice graphics) {
     var ctx = graphics._ctx;
     shader.prepare(graphics);
-    ctx.useProgram(shader._program);
+    ctx.useProgram(shader.program);
     graphics.setState(gl.DEPTH_TEST, depthTest);
     graphics.cullingState = cullFaceEnable;
     graphics.setState(gl.SAMPLE_ALPHA_TO_COVERAGE, true);
@@ -46,6 +46,8 @@ class Pass {
     }
     ctx.depthMask(depthMask);
   }
+  
+  bool get ready => shader != null && shader.ready;
 
   dispose() {
     if (shader != null) shader.dispose();

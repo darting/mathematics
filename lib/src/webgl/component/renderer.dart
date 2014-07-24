@@ -31,10 +31,7 @@ class Renderer extends Component {
 
   @override
   void _targetAdded(Node target) {
-    if (target._renderer != null) throw new Exception("There cannot be two Renderer on the same node.");
-
-
-
+    
   }
 
   @override
@@ -42,7 +39,7 @@ class Renderer extends Component {
     // TODO: implement _targetRemoved
   }
 
-  void render(GraphicsDevice graphics, [Texture renderTarget]) {
+  void render(GraphicsDevice graphics, Camera camera) {
 
     // event
     // rendertarget
@@ -63,7 +60,9 @@ class Renderer extends Component {
     if(material.ready(graphics, target)) {
       graphics.use(material.technique.defaultPass);
           
-      material.bind(graphics, target);
+      material.bind(graphics, camera, target);
+      
+      
       
       mesh._subMeshes.forEach((subMesh) {
         graphics.drawTriangles(subMesh._indices);

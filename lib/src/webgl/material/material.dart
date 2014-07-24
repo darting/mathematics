@@ -21,7 +21,7 @@ abstract class Material {
   
   bool ready(GraphicsDevice graphics, Node target);
   
-  void bind(GraphicsDevice graphics, Node target);
+  void bind(GraphicsDevice graphics, Camera camera, Node target);
 }
 
 

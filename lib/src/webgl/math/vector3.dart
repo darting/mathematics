@@ -40,4 +40,10 @@ class Vector3 {
   void set z(num val) {
     _elements[2] = val.toDouble();
   }
+
+  void copyFrom(Vector3 target) {
+    for (var i = 0; i < 3; i++) {
+      _elements[i] = target._elements[i];
+    }
+  }
 }

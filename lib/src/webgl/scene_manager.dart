@@ -25,8 +25,17 @@ class SceneManager {
 
     var graphics = Engine._sharedInstance._graphics;
 
-    _renderables.forEach((r) {
-      r.render(graphics);
+    Camera.getRenderTargets().forEach((camera) {
+      _renderables.forEach((r) {
+        r.render(graphics, camera);
+      });
     });
+
+    Camera.getSceneCameras().forEach((camera) {
+      _renderables.forEach((r) {
+        r.render(graphics, camera);
+      });
+    });
+
   }
 }

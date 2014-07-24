@@ -5,7 +5,7 @@ part of mathematics;
 
 typedef enterFrame();
 
-
+// http://codeflow.org/entries/2013/feb/22/how-to-write-portable-webgl/
 class Engine {
 
   static Engine _sharedInstance;

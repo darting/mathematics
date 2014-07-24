@@ -9,12 +9,13 @@ part of mathematics;
 class Shader implements Disposable {
 
   GraphicsDevice _graphics;
-  gl.Program _program;
-  gl.Shader _vertexShader;
-  gl.Shader _fragmentShader;
-  Map<String, ShaderProperty> _attributes;
-  Map<String, ShaderProperty> _uniforms;
-  List<String> _samplers;
+  gl.Program program;
+  gl.Shader vertexShader;
+  gl.Shader fragmentShader;
+  Map<String, ShaderProperty> attributes;
+  Map<String, ShaderProperty> uniforms;
+  List<String> samplers;
+  
   bool _ready = false;
   bool get ready => _ready;
   
@@ -51,41 +52,41 @@ class Shader implements Disposable {
     
     var ctx = graphics._ctx;
 
-    _vertexShader = _compileShader(ctx, "$common\n$vertSrc", gl.VERTEX_SHADER);
-    if (_vertexShader == null) return;
+    vertexShader = _compileShader(ctx, "$common\n$vertSrc", gl.VERTEX_SHADER);
+    if (vertexShader == null) return;
 
-    _fragmentShader = _compileShader(ctx, "$common\n$fragSrc", gl.FRAGMENT_SHADER);
-    if (_fragmentShader == null) return;
+    fragmentShader = _compileShader(ctx, "$common\n$fragSrc", gl.FRAGMENT_SHADER);
+    if (fragmentShader == null) return;
 
-    _program = ctx.createProgram();
-    ctx.attachShader(_program, _vertexShader);
-    ctx.attachShader(_program, _fragmentShader);
-    ctx.linkProgram(_program);
-    if (!ctx.getProgramParameter(_program, gl.LINK_STATUS)) {
+    program = ctx.createProgram();
+    ctx.attachShader(program, vertexShader);
+    ctx.attachShader(program, fragmentShader);
+    ctx.linkProgram(program);
+    if (!ctx.getProgramParameter(program, gl.LINK_STATUS)) {
       dispose();
       return;
     }
 
-    _attributes = {};
-    var attribCount = ctx.getProgramParameter(_program, gl.ACTIVE_ATTRIBUTES);
+    attributes = {};
+    var attribCount = ctx.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
     for (var i = 0; i < attribCount; i++) {
-      var info = ctx.getActiveAttrib(_program, i);
-      _attributes[info.name] = new ShaderProperty(info.name, ctx.getAttribLocation(_program, info.name), info.type);
+      var info = ctx.getActiveAttrib(program, i);
+      attributes[info.name] = new ShaderProperty(info.name, ctx.getAttribLocation(program, info.name), info.type);
     }
 
-    _uniforms = {};
-    _samplers = [];
-    var uniformCount = ctx.getProgramParameter(_program, gl.ACTIVE_UNIFORMS);
+    uniforms = {};
+    samplers = [];
+    var uniformCount = ctx.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
     for (var i = 0; i < uniformCount; i++) {
-      var uniform = ctx.getActiveUniform(_program, i);
+      var uniform = ctx.getActiveUniform(program, i);
       var name = uniform.name;
       var ii = name.indexOf("[0]");
       if (ii != -1) {
         name = name.substring(0, ii);
       }
-      _uniforms[name] = new ShaderProperty(name, ctx.getUniformLocation(_program, name), uniform.type);
+      uniforms[name] = new ShaderProperty(name, ctx.getUniformLocation(program, name), uniform.type);
       if (uniform.type == gl.SAMPLER_2D || uniform.type == gl.SAMPLER_CUBE) {
-        _samplers.add(name);
+        samplers.add(name);
       }
     }
     _ready = true;
@@ -106,11 +107,11 @@ class Shader implements Disposable {
 
   @override
   void dispose() {
-    if (_program != null) {
+    if (program != null) {
       var ctx = Engine._sharedInstance._graphics._ctx;
-      ctx.deleteProgram(_program);
-      ctx.deleteShader(_vertexShader);
-      ctx.deleteShader(_fragmentShader);
+      ctx.deleteProgram(program);
+      ctx.deleteShader(vertexShader);
+      ctx.deleteShader(fragmentShader);
     }
   }
 }

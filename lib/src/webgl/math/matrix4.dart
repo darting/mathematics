@@ -585,7 +585,7 @@ class Matrix4 {
     if (arg is Vector3) {
       return _mul_vector3(arg);
     }
-    if (4 == arg.dimension) {
+    if (arg is Matrix4) {
       return _mul_matrix(arg);
     }
     throw new ArgumentError(arg);

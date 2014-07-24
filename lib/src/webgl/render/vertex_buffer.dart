@@ -15,12 +15,12 @@ class VertexAttribute {
   /**
    * type specifies the data type of the values stored in the array
    */
-  int type = gl.FLOAT;
+  int type;
   /**
    * The normalized parameter in the VertexAttribPointer command identifies 
    * whether integer types should be normalized when converted to floating-point.
    */
-  bool normalized = false;
+  bool normalized;
   /**
    * Specifies the offset in bytes between the beginning of consecutive vertex attributes. 
    * Default value is 0, maximum is 255. Must be a multiple of type.
@@ -31,6 +31,8 @@ class VertexAttribute {
    * Default is 0 which means that vertex attributes are tightly packed. Must be a multiple of type.
    */
   int offset;
+
+  VertexAttribute(this.size, this.type, this.normalized, this.stride, this.offset);
 }
 
 class VertexBuffer extends Resource {
@@ -40,31 +42,44 @@ class VertexBuffer extends Resource {
   int _target;
   int _usage = gl.STATIC_DRAW;
 
-  int _vertexSize;
+  // TODO one vertex buffer maybe have multi-attributes.
+  VertexAttribute _attribute;
+
   int _numVertices = 0;
 
-  VertexBuffer.vertexData(Float32List data, this._vertexSize) {
+  VertexBuffer.vertexData(Float32List data, int vertexSize) {
     _target = gl.ARRAY_BUFFER;
-    _numVertices = data.length ~/ _vertexSize;
+    _numVertices = data.length ~/ vertexSize;
     _data = data;
-    upload();
+    _attribute = new VertexAttribute(vertexSize, gl.FLOAT, false, 0, 0);
   }
-  
+
   VertexBuffer.indexData(Uint16List data) {
     _target = gl.ELEMENT_ARRAY_BUFFER;
     _numVertices = data.length ~/ 3;
     _data = data;
-    upload();
+    _attribute = new VertexAttribute(3, gl.UNSIGNED_SHORT, false, 0, 0);
   }
 
-  void upload() {
-    var ctx = graphicsDevice._ctx;
+  void upload(GraphicsDevice graphics) {
+    var ctx = graphics._ctx;
     if (_buffer == null) {
       _buffer = ctx.createBuffer();
     }
     ctx.bindBuffer(_target, _buffer);
     ctx.bufferDataTyped(_target, _data, _usage);
     _ready = true;
+  }
+
+  void enable(GraphicsDevice graphics, ShaderProperty attrib) {
+    var ctx = graphics._ctx;
+    if (_buffer == null) {
+      upload(graphics);
+    } else {
+      ctx.bindBuffer(_target, _buffer);
+    }
+    ctx.enableVertexAttribArray(attrib.location);
+    ctx.vertexAttribPointer(attrib.location, _attribute.size, _attribute.type, _attribute.normalized, _attribute.stride, _attribute.offset);
   }
 
   @override
@@ -74,5 +89,6 @@ class VertexBuffer extends Resource {
     }
     _ready = false;
     _buffer = null;
+    _data = null;
   }
 }
