@@ -729,5 +729,5 @@ class Matrix4 {
   }
 
   Matrix4 recompose(Vector3 position, Quaternion rotation, Vector3 scaling) => fromQuaternion(rotation).scale(scaling).setTranslation(position);
-
+  
 }

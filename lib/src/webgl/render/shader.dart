@@ -33,7 +33,7 @@ class Shader implements Disposable {
     Future.wait([html.HttpRequest.getString("${url}VS.glsl"), 
                  html.HttpRequest.getString("${url}FS.glsl")]).then((r) {
       _vertSrc = r[0];
-      _commonSrc = r[1];
+      _fragSrc = r[1];
       _commonSrc = common;
     });
   }

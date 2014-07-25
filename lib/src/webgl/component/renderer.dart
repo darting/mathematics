@@ -51,8 +51,7 @@ class Renderer extends Component {
     
     var mesh = target.meshInstance.mesh;
     
-    
-    graphics.clear(backgroundColor.red, backgroundColor.green, backgroundColor.blue, backgroundColor.alpha);
+    graphics.clear(backgroundColor);
 
     // TODO get draw calls from pool ?
     var material = sharedMaterials.first;
@@ -62,10 +61,10 @@ class Renderer extends Component {
           
       material.bind(graphics, camera, target);
       
-      
-      
       mesh._subMeshes.forEach((subMesh) {
-        graphics.drawTriangles(subMesh._indices);
+        subMesh._indices.bind(graphics);
+//        graphics.drawTriangles(subMesh._indices);
+        graphics._ctx.drawElements(gl.TRIANGLES, subMesh._indices.numVertices * 3, gl.UNSIGNED_SHORT, 0);
       });
 
       graphics.flush();

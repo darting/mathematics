@@ -34,4 +34,6 @@ class Vector2 {
   void set y(num val) {
     _elements[1] = val.toDouble();
   }
+  
+  String toString() => '[${_elements[0]},${_elements[1]}}]';
 }

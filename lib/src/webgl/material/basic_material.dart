@@ -14,7 +14,9 @@ class BasicMaterial extends Material {
   }
 
   bool ready(GraphicsDevice graphics, Node target) {
-    return technique.defaultPass.ready;
+    var shader = technique.defaultPass.shader;
+    shader.prepare(graphics);
+    return shader.ready;
   }
 
   @override

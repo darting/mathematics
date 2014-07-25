@@ -29,10 +29,9 @@ class Pass {
 
   void bind(GraphicsDevice graphics) {
     var ctx = graphics._ctx;
-    shader.prepare(graphics);
     ctx.useProgram(shader.program);
+    graphics.setCullingState(cullFaceEnable);
     graphics.setState(gl.DEPTH_TEST, depthTest);
-    graphics.cullingState = cullFaceEnable;
     graphics.setState(gl.SAMPLE_ALPHA_TO_COVERAGE, true);
     graphics.setState(gl.BLEND, blending);
     if (blending) {

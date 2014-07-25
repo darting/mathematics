@@ -49,7 +49,7 @@ class PerspectiveCamera extends Camera {
 
   void updateProjection() {
     _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
-    _viewProjection = _projection * _view;
+    _dirty = true;
   }
 
 

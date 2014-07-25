@@ -8,7 +8,7 @@ void main() {
   var sceneManager = engine.sceneManager;
   var assets = engine.assets;
 
-  assets.addMesh(new Mesh("cube"));
+  assets.addMesh(new CubeMesh("cube"));
 
   
   var root = new Node("root");
@@ -18,6 +18,8 @@ void main() {
   camera
       ..addComponent(new Transform())
       ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight));
+  camera.transform.translate(0.0, 1.0, 5.0);
+  camera.transform.rotateY(1.07);
   root.addChild(camera);
   
   var cube = new Node("cube");
@@ -29,7 +31,6 @@ void main() {
   
 
   engine.enterFrame = () {
-    
     
   };
 

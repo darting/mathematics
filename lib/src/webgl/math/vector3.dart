@@ -20,10 +20,59 @@ class Vector3 {
     _elements[2] = z;
   }
 
+  double dot(Vector3 other) {
+    double sum;
+    sum = _elements[0] * other._elements[0];
+    sum += _elements[1] * other._elements[1];
+    sum += _elements[2] * other._elements[2];
+    return sum;
+  }
+
+  Vector3 cross(Vector3 other) {
+    double _x = _elements[0];
+    double _y = _elements[1];
+    double _z = _elements[2];
+    double ox = other._elements[0];
+    double oy = other._elements[1];
+    double oz = other._elements[2];
+    return new Vector3(_y * oz - _z * oy, _z * ox - _x * oz, _x * oy - _y * ox);
+  }
+
+  Vector3 crossInto(Vector3 other, Vector3 out) {
+    double _x = _elements[0];
+    double _y = _elements[1];
+    double _z = _elements[2];
+    double ox = other._elements[0];
+    double oy = other._elements[1];
+    double oz = other._elements[2];
+    out._elements[0] = _y * oz - _z * oy;
+    out._elements[1] = _z * ox - _x * oz;
+    out._elements[2] = _x * oy - _y * ox;
+    return out;
+  }
+
   double operator [](int i) => _elements[i];
 
   void operator []=(int i, double v) {
     _elements[i] = v;
+  }
+
+  Vector3 operator -() => new Vector3(-_elements[0], -_elements[1], -_elements[2]);
+
+  Vector3 operator -(Vector3 other) => new Vector3(_elements[0] - other._elements[0], _elements[1] - other._elements[1],
+      _elements[2] - other._elements[2]);
+
+  Vector3 operator +(Vector3 other) => new Vector3(_elements[0] + other._elements[0], _elements[1] + other._elements[1],
+      _elements[2] + other._elements[2]);
+
+  Vector3 operator /(double scale) {
+    var o = 1.0 / scale;
+    return new Vector3(_elements[0] * o, _elements[1] * o, _elements[2] * o);
+  }
+
+  Vector3 operator *(double scale) {
+    var o = scale;
+    return new Vector3(_elements[0] * o, _elements[1] * o, _elements[2] * o);
   }
 
   double get x => _elements[0];
@@ -46,4 +95,13 @@ class Vector3 {
       _elements[i] = target._elements[i];
     }
   }
+
+  Vector3 add(Vector3 other) {
+    _elements[0] = _elements[0] + other._elements[0];
+    _elements[1] = _elements[1] + other._elements[1];
+    _elements[2] = _elements[2] + other._elements[2];
+    return this;
+  }
+  
+  String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]}]';
 }

@@ -27,6 +27,8 @@ part 'src/webgl/component/mesh_instance.dart';
 
 part 'src/webgl/scene/node.dart';
 
+part 'src/webgl/primitives/cube.dart';
+
 part 'src/webgl/geometry/geometry.dart';
 
 part 'src/webgl/material/material.dart';
