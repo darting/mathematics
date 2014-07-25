@@ -78,7 +78,7 @@ class Node extends EventTrigger {
     }
   }
 
-  Component findComponent(Type t) => components.firstWhere((c) => c.runtimeType == t);
+  Component findComponent(Type t) => components.firstWhere((c) => c.runtimeType == t, orElse: () => null);
 
   bool hasComponent(Component component) => components.contains(component);
 

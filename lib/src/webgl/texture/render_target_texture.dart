@@ -3,6 +3,6 @@ part of mathematics;
 
 
 
-class RenderTargetTexture {
+class RenderTargetTexture extends Texture {
   
 }

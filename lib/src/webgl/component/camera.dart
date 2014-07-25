@@ -42,7 +42,12 @@ abstract class Camera extends Component {
       _dirty = false;
       if (target != null && target.transform != null) {
         target.transform.updateMatrix(false);
-        _view.lookAt(target.transform.worldPosition, _lookAtTarget, _upVector);
+//        _view.lookAt(target.transform.worldPosition, _lookAtTarget, _upVector);
+        
+        _view.copyForm(target.transform.worldMatrix);
+        _view.invert();
+        updateProjection();
+        
         _viewProjection = _projection * _view;
       }
 //    }

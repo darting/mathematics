@@ -63,8 +63,7 @@ class Renderer extends Component {
       
       mesh._subMeshes.forEach((subMesh) {
         subMesh._indices.bind(graphics);
-//        graphics.drawTriangles(subMesh._indices);
-        graphics._ctx.drawElements(gl.TRIANGLES, subMesh._indices.numVertices * 3, gl.UNSIGNED_SHORT, 0);
+        graphics.drawTriangles(subMesh._indices);
       });
 
       graphics.flush();
