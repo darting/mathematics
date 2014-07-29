@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:math' as math;
 import 'package:mathematics/mathematics.dart';
 
 
@@ -8,7 +9,7 @@ void main() {
   var sceneManager = engine.sceneManager;
   var assets = engine.assets;
 
-  assets.addMesh(new Mesh("cube"));
+  assets.addMesh(new CubeMesh("cube"));
 
   
   var root = new Node("root");
@@ -18,6 +19,8 @@ void main() {
   camera
       ..addComponent(new Transform())
       ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight));
+  camera.transform.translate(0.0, 1.0, 5.0);
+  camera.transform.rotateX(-0.1);
   root.addChild(camera);
   
   var cube = new Node("cube");
@@ -26,11 +29,10 @@ void main() {
       ..addComponent(new MeshInstance(assets.getMesh("cube")))
       ..addComponent(new Renderer());
   root.addChild(cube);
-  
 
   engine.enterFrame = () {
-    
-    
+//    camera.transform.rotateY(math.cos(engine.elapsedTime) * 0.1);
+//    camera.findComponent(PerspectiveCamera).lookAt(new Vector3.zero());
   };
 
   engine.run();

@@ -43,27 +43,32 @@ class GraphicsDevice {
     _caps = new DeviceCapabilities(_ctx);
     // init
     _ctx.enable(gl.DEPTH_TEST);
-    _ctx.enable(gl.BLEND);
+    _ctx.disable(gl.BLEND);
     _ctx.enable(gl.CULL_FACE);
-    _ctx.cullFace(gl.BACK);
-    _ctx.frontFace(gl.CCW);
     setColorMask(true);
-    setDepthTest(true, gl.LESS);
+    setDepthTest(true, gl.LEQUAL);
+    
+    configureViewport(0, 0, _renderingCanvas.width, _renderingCanvas.height);
   }
 
   void configureViewport(int x, int y, int width, int height) {
     if (_viewport == null || _viewport.left != x || _viewport.right != y || _viewport.width != width || _viewport.height != height) {
       _viewport = new math.Rectangle(x, y, width, height);
-      _ctx.viewport(_viewport.left, _viewport.right, _viewport.width, _viewport.height);
+      _ctx.viewport(_viewport.left, _viewport.top, _viewport.width, _viewport.height);
     }
+  }
+  
+  void restoreDefaultFramebuffer() {
+    _ctx.bindFramebuffer(gl.FRAMEBUFFER, null);
+    _ctx.viewport(_viewport.left, _viewport.right, _viewport.width, _viewport.height);
   }
 
   // TODO
   // 0,0,0,0,1,0xffffff
-  void clear(double red, double green, double blue, double alpha, {double depth, int stencil, int mask}) {
-    _ctx.clearColor(red, green, blue, alpha);
+  void clear(Color color, {double depth: 1.0, int stencil, int mask: gl.COLOR_BUFFER_BIT}) {
+    _ctx.clearColor(color.red, color.green, color.blue, color.alpha);
     _ctx.clearDepth(depth);
-    _ctx.clearStencil(stencil);
+    // TODO _ctx.clearStencil(stencil);
     mask = (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT) & mask;
     if (mask & gl.DEPTH_BUFFER_BIT == gl.DEPTH_BUFFER_BIT) {
       _currentDepthMask = true;
@@ -275,9 +280,9 @@ class GraphicsDevice {
 
   bool _cullingState;
   bool _cullBackFaces = true;
-  bool _depthMask;
+  bool _depthMask = false;
 
-  void set cullingState(bool val) {
+  void setCullingState(bool val) {
     if (_cullingState != val) {
       if (val) {
         _ctx.cullFace(_cullBackFaces ? gl.BACK : gl.FRONT);

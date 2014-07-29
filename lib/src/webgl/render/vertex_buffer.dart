@@ -46,6 +46,8 @@ class VertexBuffer extends Resource {
   VertexAttribute _attribute;
 
   int _numVertices = 0;
+  int get numVertices => _numVertices;
+  int get lengthInBytes => _data == null ? 0 : _data.lengthInBytes;
 
   VertexBuffer.vertexData(Float32List data, int vertexSize) {
     _target = gl.ARRAY_BUFFER;
@@ -71,13 +73,17 @@ class VertexBuffer extends Resource {
     _ready = true;
   }
 
-  void enable(GraphicsDevice graphics, ShaderProperty attrib) {
-    var ctx = graphics._ctx;
+  void bind(GraphicsDevice graphics) {
     if (_buffer == null) {
       upload(graphics);
     } else {
-      ctx.bindBuffer(_target, _buffer);
+      graphics._ctx.bindBuffer(_target, _buffer);
     }
+  }
+
+  void enable(GraphicsDevice graphics, ShaderProperty attrib) {
+    var ctx = graphics._ctx;
+    bind(graphics);
     ctx.enableVertexAttribArray(attrib.location);
     ctx.vertexAttribPointer(attrib.location, _attribute.size, _attribute.type, _attribute.normalized, _attribute.stride, _attribute.offset);
   }

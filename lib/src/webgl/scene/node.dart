@@ -11,6 +11,7 @@ class Node extends EventTrigger implements Disposable {
 
   Node parent;
   List<Node> _children;
+  List<Node> get children => _children;
 
   Renderer _renderer;
   Renderer get renderer => _renderer;
@@ -54,12 +55,16 @@ class Node extends EventTrigger implements Disposable {
   void addComponent(Component component) {
     _setSpecialComponent(component, component);
     components.add(component);
+    component._targets.add(this);
     component._targetAdded(this);
   }
 
   void removeComponent(Component component) {
+    if(!components.contains(component))
+      throw new Exception("This component is not belong the node");
     _setSpecialComponent(component, null);
     components.remove(component);
+    component._targets.remove(this);
     component._targetRemoved(this);
   }
 
@@ -73,7 +78,7 @@ class Node extends EventTrigger implements Disposable {
     }
   }
 
-  Component findComponent(Type t) => components.firstWhere((c) => c.runtimeType == t);
+  Component findComponent(Type t) => components.firstWhere((c) => c.runtimeType == t, orElse: () => null);
 
   bool hasComponent(Component component) => components.contains(component);
 

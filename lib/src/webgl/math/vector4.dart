@@ -50,4 +50,6 @@ class Vector4 {
   void set w(num val) {
     _elements[3] = val.toDouble();
   }
+  
+  String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]},${_elements[3]}]';
 }

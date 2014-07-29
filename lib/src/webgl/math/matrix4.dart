@@ -729,5 +729,24 @@ class Matrix4 {
   }
 
   Matrix4 recompose(Vector3 position, Quaternion rotation, Vector3 scaling) => fromQuaternion(rotation).scale(scaling).setTranslation(position);
-
+  
+  int index(int row, int col) => (col * 4) + row;
+  
+  Vector4 getRow(int row) {
+    Vector4 r = new Vector4.zero();
+    r._elements[0] = _elements[index(row, 0)];
+    r._elements[1] = _elements[index(row, 1)];
+    r._elements[2] = _elements[index(row, 2)];
+    r._elements[3] = _elements[index(row, 3)];
+    return r;
+  }
+  
+  String toString() {
+    String s = '';
+    s = '$s[0] ${getRow(0)}\n';
+    s = '$s[1] ${getRow(1)}\n';
+    s = '$s[2] ${getRow(2)}\n';
+    s = '$s[3] ${getRow(3)}\n';
+    return s;
+  }
 }

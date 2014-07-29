@@ -9,7 +9,56 @@ class Quaternion {
   Quaternion.identity() : _elements = new Float32List(4) {
     _elements[3] = 1.0;
   }
-  
+
+  void copyFrom(Quaternion val) {
+    _elements[0] = val._elements[0];
+    _elements[1] = val._elements[1];
+    _elements[2] = val._elements[2];
+    _elements[3] = val._elements[3];
+  }
+
+  void rotateX(double rad) {
+    rad *= 0.5;
+    var ax = _elements[0],
+        ay = _elements[1],
+        az = _elements[2],
+        aw = _elements[3],
+        bx = math.sin(rad),
+        bw = math.cos(rad);
+    _elements[0] = ax * bw + aw * bx;
+    _elements[1] = ay * bw + az * bx;
+    _elements[2] = az * bw - ay * bx;
+    _elements[3] = aw * bw - ax * bx;
+  }
+
+  void rotateY(double rad) {
+    rad *= 0.5;
+    var ax = _elements[0],
+        ay = _elements[1],
+        az = _elements[2],
+        aw = _elements[3],
+        by = math.sin(rad),
+        bw = math.cos(rad);
+    _elements[0] = ax * bw - az * by;
+    _elements[1] = ay * bw + aw * by;
+    _elements[2] = az * bw + ax * by;
+    _elements[3] = aw * bw - ay * by;
+  }
+
+  void rotateZ(double rad) {
+    rad *= 0.5;
+    var ax = _elements[0],
+        ay = _elements[1],
+        az = _elements[2],
+        aw = _elements[3],
+        bz = math.sin(rad),
+        bw = math.cos(rad);
+    _elements[0] = ax * bw + ay * bz;
+    _elements[1] = ay * bw - ax * bz;
+    _elements[2] = az * bw + aw * bz;
+    _elements[3] = aw * bw - az * bz;
+  }
+
   void setFromRotation(Matrix4 m) {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -59,4 +108,6 @@ class Quaternion {
   void operator []=(int i, double v) {
     _elements[i] = v;
   }
+  
+  String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]},${_elements[3]}]';
 }
