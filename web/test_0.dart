@@ -32,6 +32,8 @@ void main() {
 
   engine.enterFrame = () {
 //    camera.transform.rotateY(math.cos(engine.elapsedTime) * 0.1);
+    camera.transform.translate(math.cos(engine.elapsedTime), 1.0, math.sin(engine.elapsedTime));
+    camera.transform.lookAt(new Vector3.zero());
 //    camera.findComponent(PerspectiveCamera).lookAt(new Vector3.zero());
   };
 

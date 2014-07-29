@@ -56,8 +56,8 @@ class PerspectiveCamera extends Camera {
 
   @override
   _targetAdded(Node target) {
-    _worldMatrixChanged = target.on("worldMatrixChanged").listen((e) {
-      _view = target.transform.worldMatrix.clone();
+    _worldMatrixChanged = target.on("worldMatrixChanged").listen((transform) {
+      _view.copyForm(transform.worldMatrix);
       _view.invert();
       _viewProjection = _projection * _view;
     });

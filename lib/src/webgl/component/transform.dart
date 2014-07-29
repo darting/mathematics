@@ -5,12 +5,17 @@ part of mathematics;
 
 class Transform extends Component {
   Vector3 _position;
-  Vector3 worldPosition;
   Vector3 _scaling;
   Quaternion _rotation;
   Matrix4 _localMatrix;
+  Vector3 lookAtTarget;
+  Vector3 upVector = WORLD_UP;
+  
+  bool _localDirty;
+  bool _worldDirty;
+
+  Vector3 worldPosition;
   Matrix4 worldMatrix;
-  bool _dirty;
 
   Transform() {
     _position = new Vector3.zero();
@@ -18,71 +23,85 @@ class Transform extends Component {
     _scaling = new Vector3.all(1.0);
     _rotation = new Quaternion.identity();
     _localMatrix = new Matrix4.identity();
-    _dirty = true;
+    _worldDirty = true;
+    _localDirty = true;
+  }
+
+  void lookAt(Vector3 target) {
+    if(lookAtTarget == null) lookAtTarget = new Vector3.zero();
+    lookAtTarget.copyFrom(target);
+    _localMatrix.lookAt(_position, target, upVector);
+    _localMatrix.decompose(_position, _rotation, _scaling);
+    _localDirty = false;
+    _worldDirty = true;
   }
 
   void set scaling(Vector3 val) {
     _scaling.copyFrom(val);
-    _dirty = true;
+    _localDirty = true;
   }
 
   void set rotation(Quaternion val) {
     _rotation.copyFrom(val);
-    _dirty = true;
+    _localDirty = true;
   }
 
   void set position(Vector3 val) {
     _position.copyFrom(val);
-    _dirty = true;
+    _localDirty = true;
   }
 
   void translate(dynamic x, [double y = 0.0, double z = 0.0]) {
     if (x is Vector3) {
       _position.add(x);
     } else {
-      _position.x += x;
-      _position.y += y;
-      _position.z += z;
+      _position.x = x;
+      _position.y = y;
+      _position.z = z;
     }
-    _dirty = true;
+    _localDirty = true;
   }
 
   void rotateX(double rad) {
     _rotation.rotateX(rad);
-    _dirty = true;
+    _localDirty = true;
   }
 
   void rotateY(double rad) {
     _rotation.rotateY(rad);
-    _dirty = true;
+    _localDirty = true;
   }
 
   void rotateZ(double rad) {
     _rotation.rotateZ(rad);
-    _dirty = true;
+    _localDirty = true;
   }
 
   applyMatrix(Matrix4 m) {
     _localMatrix.copyForm(m);
     _localMatrix.decompose(_position, _rotation, _scaling);
-    _dirty = false;
+    _localDirty = false;
+    _worldDirty = true;
   }
 
   updateMatrix([bool updateChildren = true]) {
-    if (_dirty) {
+    if (_localDirty) {
       _localMatrix.recompose(_position, _rotation, _scaling);
+      _worldDirty = true;
     }
 
-    if (worldMatrix == null || _dirty) {
+    if (worldMatrix == null || _worldDirty) {
       if (target.parent != null && target.parent.transform != null) {
         worldMatrix = target.parent.transform.worldMatrix * _localMatrix;
       } else {
         worldMatrix = _localMatrix.clone();
       }
       worldPosition.setValues(worldMatrix[12], worldMatrix[13], worldMatrix[14]);
+
+      target.on("worldMatrixChanged").dispatch(this);
     }
 
-    _dirty = false;
+    _localDirty = _worldDirty = false;
 
     if (updateChildren && target._children != null) {
       target._children.forEach((c) {
