@@ -15,6 +15,7 @@ class EventTrigger {
 
   void cancelSubscriptions() {
     _streams.forEach((k, v) => v.cancelSubscriptions());
+    _streams.clear();
   }
 
 }

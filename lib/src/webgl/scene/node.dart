@@ -4,7 +4,7 @@ part of mathematics;
 
 
 
-class Node extends EventTrigger {
+class Node extends EventTrigger implements Disposable {
 
   final String uniqueId;
   final List<Component> components;
@@ -84,5 +84,8 @@ class Node extends EventTrigger {
     components.forEach((c) => c._receive(message, data));
   }
 
-
+  @override
+  void dispose() {
+    cancelSubscriptions();
+  }
 }
