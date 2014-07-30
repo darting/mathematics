@@ -8,8 +8,6 @@ class Transform extends Component {
   Vector3 _scaling;
   Quaternion _rotation;
   Matrix4 _localMatrix;
-  Vector3 lookAtTarget;
-  Vector3 upVector = WORLD_UP;
   
   bool _localDirty;
   bool _worldDirty;
@@ -26,25 +24,22 @@ class Transform extends Component {
     _worldDirty = true;
     _localDirty = true;
   }
-
-  void lookAt(Vector3 target) {
-    if(lookAtTarget == null) lookAtTarget = new Vector3.zero();
-    lookAtTarget.copyFrom(target);
-    _localMatrix.lookAt(_position, target, upVector);
-    _localMatrix.decompose(_position, _rotation, _scaling);
-    _localDirty = false;
-    _worldDirty = true;
-  }
+  
+  Vector3 get scaling => _scaling;
 
   void set scaling(Vector3 val) {
     _scaling.copyFrom(val);
     _localDirty = true;
   }
+  
+  Quaternion get rotation => _rotation;
 
   void set rotation(Quaternion val) {
     _rotation.copyFrom(val);
     _localDirty = true;
   }
+  
+  Vector3 get position => _position;
 
   void set position(Vector3 val) {
     _position.copyFrom(val);

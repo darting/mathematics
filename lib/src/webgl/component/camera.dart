@@ -18,15 +18,30 @@ abstract class Camera extends Component {
   Matrix4 _view;
   Matrix4 _projection;
   Matrix4 _viewProjection;
-
-  bool _dirty = true;
+  
+  Vector3 lookAtTarget;
+  Vector3 upVector = WORLD_UP;
 
   Camera() {
     cameras.add(this);
     _view = new Matrix4.zero();
   }
 
+  void lookAt(Vector3 center) {
+    if(target == null || target.transform == null) throw new Exception("target is null or transform is null.");
+    if(lookAtTarget == null) lookAtTarget = new Vector3.zero();
+    lookAtTarget.copyFrom(center);
+    target.transform.updateMatrix(false);
+    _view.lookAt(target.transform.worldPosition, center, upVector);
+    updateProjection();
+  }
+
   void updateProjection();
+  
+  @override
+  void dispose() {
+    cameras.remove(this);
+  }
 
   Matrix4 get viewProjection => _viewProjection;
   Matrix4 get projection => _projection;

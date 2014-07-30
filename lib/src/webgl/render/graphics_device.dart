@@ -65,10 +65,10 @@ class GraphicsDevice {
 
   // TODO
   // 0,0,0,0,1,0xffffff
-  void clear(Color color, {double depth: 1.0, int stencil, int mask: gl.COLOR_BUFFER_BIT}) {
+  void clear(Color color, {double depth: 1.0, int stencil: 1, int mask: gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT}) {
     _ctx.clearColor(color.red, color.green, color.blue, color.alpha);
     _ctx.clearDepth(depth);
-    // TODO _ctx.clearStencil(stencil);
+    _ctx.clearStencil(stencil);
     mask = (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT) & mask;
     if (mask & gl.DEPTH_BUFFER_BIT == gl.DEPTH_BUFFER_BIT) {
       _currentDepthMask = true;

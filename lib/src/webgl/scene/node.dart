@@ -21,6 +21,9 @@ class Node extends EventTrigger implements Disposable {
 
   Transform _transform;
   Transform get transform => _transform;
+  
+  Camera _camera;
+  Camera get camera => _camera;
 
   Node(this.uniqueId) : components = [];
 
@@ -75,6 +78,8 @@ class Node extends EventTrigger implements Disposable {
       _meshInstance = value;
     } else if (component is Transform) {
       _transform = value;
+    } else if (component is Camera) {
+      _camera = value;
     }
   }
 
