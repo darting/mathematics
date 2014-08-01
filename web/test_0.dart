@@ -6,30 +6,33 @@ import 'package:mathematics/mathematics.dart';
 void main() {
   var canvas = html.querySelector("#stage");
   var engine = new Engine(canvas);
-  var sceneManager = engine.sceneManager;
+  var scene = engine.scene;
   var assets = engine.assets;
 
   assets.addMesh(new CubeMesh("cube"));
 
-  
-  var root = new Node("root");
-  sceneManager.add(root);
-
-  var camera = new Node("camera");
+  var camera = new GameObject("camera");
   camera
       ..addComponent(new Transform())
       ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight));
   camera.transform.translate(5.0, 1.0, 5.0);
   camera.camera.lookAt(new Vector3.zero());
   
-  root.addChild(camera);
+  scene.addChild(camera);
   
-  var cube = new Node("cube");
+  var cube = new GameObject("cube");
   cube
       ..addComponent(new Transform())
       ..addComponent(new MeshInstance(assets.getMesh("cube")))
-      ..addComponent(new Renderer(backgroundColor: Color.black()));
-  root.addChild(cube);
+      ..addComponent(new Renderer());
+  scene.addChild(cube);
+  
+  var cube2 = new GameObject("cube")
+      ..addComponent(new Transform())
+      ..addComponent(new MeshInstance(assets.getMesh("cube")))
+      ..addComponent(new Renderer());
+  cube2.transform.translate(-1.5);
+  scene.addChild(cube2);
 
   var speed = 1000;
   var i = 2;

@@ -2,8 +2,15 @@ precision highp float;
 attribute vec3 aPosition;
 attribute vec3 aNormal;
 
-uniform mat4 uViewMat;
+
+#ifdef NUM_MODEL_MAT
+attribute float aMatIdx;
+uniform mat4 uModelMats[NUM_MODEL_MAT];
+#else
 uniform mat4 uModelMat;
+#endif
+
+uniform mat4 uViewMat;
 uniform mat4 uProjectionMat;
 
 varying vec4 vPosition;
@@ -14,7 +21,13 @@ mat3 getNormalMat(mat4 mat) {
 }
 
 void main(void) {
-    mat4 modelViewMat = uViewMat * uModelMat;
+    mat4 modelViewMat;
+    
+    #ifdef NUM_MODEL_MAT
+      modelViewMat = uViewMat * uModelMats[aMatIdx];
+    #else
+      modelViewMat = uViewMat * uModelMat;
+    #endif
     
     vPosition = modelViewMat * vec4(aPosition, 1.0);
     gl_Position = uProjectionMat * vPosition;

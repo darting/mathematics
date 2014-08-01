@@ -86,8 +86,9 @@ class Transform extends Component {
     }
 
     if (worldMatrix == null || _worldDirty) {
-      if (entity.parent != null && entity.parent.transform != null) {
-        worldMatrix = entity.parent.transform.worldMatrix * _localMatrix;
+      var parent = entity.parent as GameObject;
+      if (parent != null && parent.transform != null) {
+        worldMatrix = parent.transform.worldMatrix * _localMatrix;
       } else {
         worldMatrix = _localMatrix.clone();
       }
@@ -106,12 +107,12 @@ class Transform extends Component {
   }
 
   @override
-  void _entityAdded(Entity entity) {
+  void _entityAdded(GameObject entity) {
     // TODO: implement _targetAdded
   }
 
   @override
-  void _entityRemoved(Entity entity) {
+  void _entityRemoved(GameObject entity) {
     // TODO: implement _targetRemoved
   }
 

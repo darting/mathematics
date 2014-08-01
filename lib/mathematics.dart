@@ -14,7 +14,6 @@ import 'dart:async';
 part 'src/webgl/disposable.dart';
 
 part 'src/webgl/engine.dart';
-part 'src/webgl/scene_manager.dart';
 part 'src/webgl/assets.dart';
 part 'src/webgl/mesh.dart';
 
@@ -26,7 +25,9 @@ part 'src/webgl/component/perspective_camera.dart';
 part 'src/webgl/component/mesh_instance.dart';
 part 'src/webgl/component/light.dart';
 
-part 'src/webgl/scene/entity.dart';
+part 'src/webgl/scene/node.dart';
+part 'src/webgl/scene/game_object.dart';
+part 'src/webgl/scene/scene.dart';
 
 part 'src/webgl/primitives/cube.dart';
 
@@ -55,6 +56,10 @@ part 'src/webgl/render/technique.dart';
 part 'src/webgl/render/pass.dart';
 part 'src/webgl/render/vertex_buffer.dart';
 part 'src/webgl/render/draw_call.dart';
+part 'src/webgl/render/draw_call_pool.dart';
+
+// not finish yet
+part 'src/webgl/render/draw_call_backup.dart';
 
 part 'src/webgl/event/event_stream.dart';
 part 'src/webgl/event/event_trigger.dart';

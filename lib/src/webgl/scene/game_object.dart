@@ -4,14 +4,11 @@ part of mathematics;
 
 
 
-class Entity extends EventTrigger implements Disposable {
+class GameObject extends Node {
 
-  final String uniqueId;
   final List<Component> components;
 
-  Entity parent;
-  List<Entity> _children;
-  List<Entity> get children => _children;
+  bool isStatic = false;
 
   Renderer _renderer;
   Renderer get renderer => _renderer;
@@ -24,36 +21,10 @@ class Entity extends EventTrigger implements Disposable {
   
   Camera _camera;
   Camera get camera => _camera;
+  
+  Scene get scene => root as Scene;
 
-  Entity(this.uniqueId) : components = [];
-
-  void addChild(Entity child) {
-    if (_children == null) _children = [];
-    _children.add(child);
-    child.removeFromParent();
-    child.parent = this;
-  }
-
-  void removeFromParent() {
-    if (parent != null) parent.removeChild(this);
-  }
-
-  void removeChild(Entity child) {
-    if (child.parent == this) child.parent = null;
-    if (_children != null) _children.remove(child);
-  }
-
-  void removeChildren() {
-    if (_children != null) {
-      _children.forEach((c) => c.parent = null);
-      _children.clear();
-    }
-  }
-
-  bool contains(Entity child) {
-    if (_children != null) return _children.contains(child);
-    return false;
-  }
+  GameObject(String uniqueId) : components = [], super(uniqueId);
 
   void addComponent(Component component) {
     _setSpecialComponent(component, component);
@@ -92,10 +63,5 @@ class Entity extends EventTrigger implements Disposable {
    */
   void notify(String message, data) {
     components.forEach((c) => c._receive(message, data));
-  }
-
-  @override
-  void dispose() {
-    cancelSubscriptions();
   }
 }

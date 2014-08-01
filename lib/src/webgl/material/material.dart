@@ -19,9 +19,9 @@ abstract class Material {
    */
   int renderQueue;
   
-  bool ready(GraphicsDevice graphics, Entity entity);
+  bool ready(GraphicsDevice graphics, GameObject entity);
   
-  void bind(GraphicsDevice graphics, Camera camera, Entity entity);
+  void bind(GraphicsDevice graphics, Camera camera, GameObject entity);
   
 }
 

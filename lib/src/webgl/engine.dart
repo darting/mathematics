@@ -10,7 +10,7 @@ class Engine {
 
   static Engine _sharedInstance;
 
-  final SceneManager sceneManager;
+  final Scene scene;
   final Assets assets;
 
   num _totalTime = 0.0;
@@ -34,7 +34,7 @@ class Engine {
   }
 
   Engine._(html.CanvasElement canvas)
-      : sceneManager = new SceneManager(),
+      : scene = new Scene(),
         assets = new Assets() {
     
     _graphics = new GraphicsDevice(canvas);
@@ -66,7 +66,7 @@ class Engine {
     // bounding box
     // particles
     // clear
-    sceneManager.update();
+    scene.update();
 
     if (exitFrame != null) exitFrame();
   }
