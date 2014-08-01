@@ -17,6 +17,8 @@ part 'src/webgl/engine.dart';
 part 'src/webgl/assets.dart';
 part 'src/webgl/mesh.dart';
 
+part 'src/webgl/loader/obj_loader.dart';
+
 part 'src/webgl/component/component.dart';
 part 'src/webgl/component/camera.dart';
 part 'src/webgl/component/renderer.dart';
