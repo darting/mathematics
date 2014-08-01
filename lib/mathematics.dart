@@ -37,6 +37,7 @@ part 'src/webgl/geometry/geometry.dart';
 
 part 'src/webgl/material/material.dart';
 part 'src/webgl/material/basic_material.dart';
+part 'src/webgl/material/physically_based_render_material.dart';
 
 part 'src/webgl/math/matrix4.dart';
 part 'src/webgl/math/quaternion.dart';
@@ -85,6 +86,10 @@ void assertNotNull(target, String desc) {
   if(target == null) throw new Exception(desc);
 }
 
+or(expectValue, defaultValue) {
+  if (expectValue == null) return defaultValue;
+  return expectValue;
+}
 
 
 

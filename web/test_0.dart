@@ -10,12 +10,17 @@ void main() {
   var assets = engine.assets;
 
   assets.addMesh(new CubeMesh("cube"));
+  assets.loadTexture("res/obj/skin.jpg", id: "skin");
   
   new ObjLoader().load("res/obj/head.o", "head").then((m) {
+    
+    var material = new PhysicallyBasedRenderMaterial();
+    material.diffuseTexture = assets.getTexture("skin");
+    
     var head = new GameObject("head")
       ..addComponent(new Transform())
       ..addComponent(new MeshInstance(m))
-      ..addComponent(new Renderer());
+      ..addComponent(new Renderer(material: material));
     head.transform.translate(0.0, -1.0);
     scene.addChild(head);
   });

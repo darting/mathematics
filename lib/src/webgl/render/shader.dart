@@ -122,4 +122,7 @@ class ShaderProperty {
   dynamic location;
   int type;
   ShaderProperty(this.name, this.location, this.type);
+  
+  @override
+  String toString() => "${name}: ${location}";
 }
