@@ -18,9 +18,11 @@ abstract class Camera extends Component {
   Matrix4 _view;
   Matrix4 _projection;
   Matrix4 _viewProjection;
-  
+
   Vector3 lookAtTarget;
   Vector3 upVector = WORLD_UP;
+
+  StreamSubscription _worldMatrixChanged;
 
   Camera() {
     cameras.add(this);
@@ -28,8 +30,8 @@ abstract class Camera extends Component {
   }
 
   void lookAt(Vector3 center) {
-    if(target == null || target.transform == null) throw new Exception("target is null or transform is null.");
-    if(lookAtTarget == null) lookAtTarget = new Vector3.zero();
+    if (target == null || target.transform == null) throw new Exception("target is null or transform is null.");
+    if (lookAtTarget == null) lookAtTarget = new Vector3.zero();
     lookAtTarget.copyFrom(center);
     target.transform.updateMatrix(false);
     _view.lookAt(target.transform.worldPosition, center, upVector);
@@ -37,7 +39,22 @@ abstract class Camera extends Component {
   }
 
   void updateProjection();
-  
+
+  @override
+  _targetAdded(Node target) {
+    _worldMatrixChanged = target.on("worldMatrixChanged").listen((Transform transform) {
+      _view.copyForm(transform.worldMatrix);
+      _view.invert();
+      _viewProjection = _projection * _view;
+    });
+  }
+
+  @override
+  void _targetRemoved(Node target) {
+    _worldMatrixChanged.cancel();
+    _worldMatrixChanged = null;
+  }
+
   @override
   void dispose() {
     cameras.remove(this);

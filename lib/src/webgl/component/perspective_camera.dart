@@ -51,21 +51,4 @@ class PerspectiveCamera extends Camera {
     _projection = new Matrix4.perspective(_fov, _aspect, _near, _far);
     _viewProjection = _projection * _view;
   }
-  
-  StreamSubscription _worldMatrixChanged;
-
-  @override
-  _targetAdded(Node target) {
-    _worldMatrixChanged = target.on("worldMatrixChanged").listen((Transform transform) {
-      _view.copyForm(transform.worldMatrix);
-      _view.invert();
-      _viewProjection = _projection * _view;
-    });
-  }
-
-  @override
-  void _targetRemoved(Node target) {
-    _worldMatrixChanged.cancel();
-    _worldMatrixChanged = null;
-  }
 }
