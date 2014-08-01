@@ -33,7 +33,6 @@ class DrawCall {
           graphics.drawTriangles(subMesh._indices);
         });
       });
-      graphics.flush();
     }
   }
 }

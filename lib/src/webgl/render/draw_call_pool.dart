@@ -38,6 +38,7 @@ class DrawCallPool {
     _drawCalls.forEach((_, drawCall) {
       drawCall.render(graphics, camera);
     });
+    graphics.flush();
   }
 }
 
