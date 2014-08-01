@@ -51,6 +51,37 @@ class Vector3 {
     return out;
   }
 
+  Vector3 normalize() {
+    double l = length;
+    if (l == 0.0) {
+      return this;
+    }
+    l = 1.0 / l;
+    _elements[0] *= l;
+    _elements[1] *= l;
+    _elements[2] *= l;
+    return this;
+  }
+
+  double get length {
+    double sum;
+    sum = (_elements[0] * _elements[0]);
+    sum += (_elements[1] * _elements[1]);
+    sum += (_elements[2] * _elements[2]);
+    return math.sqrt(sum);
+  }
+
+  /**
+   * Length squared.
+   */
+  double get length2 {
+    double sum;
+    sum = (_elements[0] * _elements[0]);
+    sum += (_elements[1] * _elements[1]);
+    sum += (_elements[2] * _elements[2]);
+    return sum;
+  }
+
   double operator [](int i) => _elements[i];
 
   void operator []=(int i, double v) {
@@ -59,11 +90,9 @@ class Vector3 {
 
   Vector3 operator -() => new Vector3(-_elements[0], -_elements[1], -_elements[2]);
 
-  Vector3 operator -(Vector3 other) => new Vector3(_elements[0] - other._elements[0], _elements[1] - other._elements[1],
-      _elements[2] - other._elements[2]);
+  Vector3 operator -(Vector3 other) => new Vector3(_elements[0] - other._elements[0], _elements[1] - other._elements[1], _elements[2] - other._elements[2]);
 
-  Vector3 operator +(Vector3 other) => new Vector3(_elements[0] + other._elements[0], _elements[1] + other._elements[1],
-      _elements[2] + other._elements[2]);
+  Vector3 operator +(Vector3 other) => new Vector3(_elements[0] + other._elements[0], _elements[1] + other._elements[1], _elements[2] + other._elements[2]);
 
   Vector3 operator /(double scale) {
     var o = 1.0 / scale;
@@ -102,6 +131,8 @@ class Vector3 {
     _elements[2] = _elements[2] + other._elements[2];
     return this;
   }
-  
+
+  Vector3 clone() => new Vector3(_elements[0], _elements[1], _elements[2]);
+
   String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]}]';
 }

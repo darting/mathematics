@@ -25,6 +25,22 @@ class Vector2 {
     _elements[i] = v;
   }
 
+  Vector2 operator -() => new Vector2(-_elements[0], -_elements[1]);
+
+  Vector2 operator -(Vector2 other) => new Vector2(_elements[0] - other._elements[0], _elements[1] - other._elements[1]);
+
+  Vector2 operator +(Vector2 other) => new Vector2(_elements[0] + other._elements[0], _elements[1] + other._elements[1]);
+
+  Vector2 operator /(double scale) {
+    var o = 1.0 / scale;
+    return new Vector2(_elements[0] * o, _elements[1] * o);
+  }
+
+  Vector2 operator *(double scale) {
+    var o = scale;
+    return new Vector2(_elements[0] * o, _elements[1] * o);
+  }
+
   double get x => _elements[0];
   void set x(num val) {
     _elements[0] = val.toDouble();
@@ -35,5 +51,7 @@ class Vector2 {
     _elements[1] = val.toDouble();
   }
   
+  Vector2 clone() => new Vector2(_elements[0], _elements[1]);
+
   String toString() => '[${_elements[0]},${_elements[1]}}]';
 }

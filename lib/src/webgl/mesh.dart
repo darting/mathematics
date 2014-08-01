@@ -36,6 +36,10 @@ class Mesh extends Resource {
   VertexBuffer get colors2 => _colors2;
   set colors2(data) => _colors2 = _newVertexBuffer(data, 4);
 
+  VertexBuffer _tangents;
+  VertexBuffer get tangents => _tangents;
+  set tangents(data) => _tangents = _newVertexBuffer(data, 3);
+
   VertexBuffer _newVertexBuffer(data, size) {
     VertexBuffer result;
     if (data is VertexBuffer) {
@@ -97,19 +101,74 @@ class Mesh extends Resource {
       }
     }
   }
-  
+
+  void computeTangentSpace() {
+
+    var tan1 = new List<Vector3>.generate(_vertices.numVertices, (i) => new Vector3.zero());
+    var tan2 = new List<Vector3>.generate(_vertices.numVertices, (i) => new Vector3.zero());
+
+    var len = numSubMeshes;
+
+    for (var i = 0; i < len; i++) {
+      var indices = getIndices(i)._data as Uint16List;
+      var count = indices.length;
+
+      for (var f = 0; f < count; f += 3) {
+        var i1 = indices[f];
+        var i2 = indices[f + 1];
+        var i3 = indices[f + 2];
+
+        var p1 = getVertex(i1);
+        var p2 = getVertex(i2);
+        var p3 = getVertex(i3);
+
+        var w1 = getUV(i1);
+        var w2 = getUV(i1);
+        var w3 = getUV(i1);
+
+        var v1 = p2 - p1;
+        var v2 = p3 - p1;
+
+        var s1 = w2 - w1;
+        var s2 = w3 - w1;
+
+        var r = 1.0 / (s1.x * s2.y - s2.x * s1.y);
+        var sdir = new Vector3((s2.y * v1.x - s1.y * v2.x) * r, (s2.y * v1.y - s1.y * v2.y) * r, (s2.y * v1.z - s1.y * v2.z) * r);
+        var tdir = new Vector3((s1.x * v2.x - s2.x * v1.x) * r, (s1.x * v2.y - s2.x * v1.y) * r, (s1.x * v2.z - s2.x * v1.z) * r);
+
+        tan1[i1] += sdir;
+        tan1[i2] += sdir;
+        tan1[i3] += sdir;
+
+        tan2[i1] += tdir;
+        tan2[i2] += tdir;
+        tan2[i3] += tdir;
+      }
+
+      for (var i = 0; i < count; i++) {
+        var vi = indices[i];
+        var n = getNormal(vi);
+        var t = tan1[vi];
+        var tan = (t - n * n.dot(t)).normalize();
+        setTangents(vi, tan);
+        // TODO Calculate handedness
+        //   -> tan.w = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
+      }
+    }
+  }
+
   Vector3 getVertex(int index) {
     index *= 3;
     var data = _vertices._data as Float32List;
     return new Vector3(data[index], data[index + 1], data[index + 2]);
   }
-  
+
   Vector3 getNormal(int index) {
     index *= 3;
     var data = _normals._data as Float32List;
     return new Vector3(data[index], data[index + 1], data[index + 2]);
   }
-  
+
   void setNormal(int index, normal) {
     index *= 3;
     var data = _normals._data as Float32List;
@@ -118,8 +177,30 @@ class Mesh extends Resource {
     data[index + 2] = normal[2];
   }
 
-  void computeTangentSpace([bool normals]) {
+  Vector2 getUV(int index) {
+    index *= 2;
+    var data = _uv._data as Float32List;
+    return new Vector2(data[index], data[index + 1]);
+  }
 
+  Vector2 getUV2(int index) {
+    index *= 2;
+    var data = _uv2._data as Float32List;
+    return new Vector2(data[index], data[index + 1]);
+  }
+  
+  Vector3 getTangents(int index) {
+    index *= 3;
+    var data = _tangents._data as Float32List;
+    return new Vector3(data[index], data[index + 1], data[index + 2]);
+  }
+  
+  void setTangents(int index, tangents) {
+    index *= 3;
+    var data = _tangents._data as Float32List;
+    data[index] = tangents[0];
+    data[index + 1] = tangents[1];
+    data[index + 2] = tangents[2];
   }
 
   @override

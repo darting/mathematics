@@ -51,5 +51,7 @@ class Vector4 {
     _elements[3] = val.toDouble();
   }
   
+  Vector4 clone() => new Vector4(_elements[0], _elements[1], _elements[2], _elements[3]);
+  
   String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]},${_elements[3]}]';
 }
