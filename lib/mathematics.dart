@@ -25,7 +25,7 @@ part 'src/webgl/component/transform.dart';
 part 'src/webgl/component/perspective_camera.dart';
 part 'src/webgl/component/mesh_instance.dart';
 
-part 'src/webgl/scene/node.dart';
+part 'src/webgl/scene/entity.dart';
 
 part 'src/webgl/primitives/cube.dart';
 

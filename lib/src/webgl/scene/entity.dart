@@ -4,14 +4,14 @@ part of mathematics;
 
 
 
-class Node extends EventTrigger implements Disposable {
+class Entity extends EventTrigger implements Disposable {
 
   final String uniqueId;
   final List<Component> components;
 
-  Node parent;
-  List<Node> _children;
-  List<Node> get children => _children;
+  Entity parent;
+  List<Entity> _children;
+  List<Entity> get children => _children;
 
   Renderer _renderer;
   Renderer get renderer => _renderer;
@@ -25,9 +25,9 @@ class Node extends EventTrigger implements Disposable {
   Camera _camera;
   Camera get camera => _camera;
 
-  Node(this.uniqueId) : components = [];
+  Entity(this.uniqueId) : components = [];
 
-  void addChild(Node child) {
+  void addChild(Entity child) {
     if (_children == null) _children = [];
     _children.add(child);
     child.removeFromParent();
@@ -38,7 +38,7 @@ class Node extends EventTrigger implements Disposable {
     if (parent != null) parent.removeChild(this);
   }
 
-  void removeChild(Node child) {
+  void removeChild(Entity child) {
     if (child.parent == this) child.parent = null;
     if (_children != null) _children.remove(child);
   }
@@ -50,7 +50,7 @@ class Node extends EventTrigger implements Disposable {
     }
   }
 
-  bool contains(Node child) {
+  bool contains(Entity child) {
     if (_children != null) return _children.contains(child);
     return false;
   }
@@ -58,8 +58,8 @@ class Node extends EventTrigger implements Disposable {
   void addComponent(Component component) {
     _setSpecialComponent(component, component);
     components.add(component);
-    component._targets.add(this);
-    component._targetAdded(this);
+    component._entities.add(this);
+    component._entityAdded(this);
   }
 
   void removeComponent(Component component) {
@@ -67,8 +67,8 @@ class Node extends EventTrigger implements Disposable {
       throw new Exception("This component is not belong the node");
     _setSpecialComponent(component, null);
     components.remove(component);
-    component._targets.remove(this);
-    component._targetRemoved(this);
+    component._entities.remove(this);
+    component._entityRemoved(this);
   }
 
   void _setSpecialComponent(Component component, value) {

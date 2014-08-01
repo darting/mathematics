@@ -86,32 +86,32 @@ class Transform extends Component {
     }
 
     if (worldMatrix == null || _worldDirty) {
-      if (target.parent != null && target.parent.transform != null) {
-        worldMatrix = target.parent.transform.worldMatrix * _localMatrix;
+      if (entity.parent != null && entity.parent.transform != null) {
+        worldMatrix = entity.parent.transform.worldMatrix * _localMatrix;
       } else {
         worldMatrix = _localMatrix.clone();
       }
       worldPosition.setValues(worldMatrix[12], worldMatrix[13], worldMatrix[14]);
 
-      target.on("worldMatrixChanged").dispatch(this);
+      entity.on("worldMatrixChanged").dispatch(this);
     }
 
     _localDirty = _worldDirty = false;
 
-    if (updateChildren && target._children != null) {
-      target._children.forEach((c) {
+    if (updateChildren && entity._children != null) {
+      entity._children.forEach((c) {
         if (c._transform != null) c._transform.updateMatrix(updateChildren);
       });
     }
   }
 
   @override
-  void _targetAdded(Node target) {
+  void _entityAdded(Entity entity) {
     // TODO: implement _targetAdded
   }
 
   @override
-  void _targetRemoved(Node target) {
+  void _entityRemoved(Entity entity) {
     // TODO: implement _targetRemoved
   }
 

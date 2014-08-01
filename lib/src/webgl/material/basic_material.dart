@@ -13,21 +13,21 @@ class BasicMaterial extends Material {
     technique.add(new Pass("default", new Shader.load("packages/mathematics/src/webgl/shaders/basic")));
   }
 
-  bool ready(GraphicsDevice graphics, Node target) {
+  bool ready(GraphicsDevice graphics, Entity entity) {
     var shader = technique.defaultPass.shader;
     shader.prepare(graphics);
     return shader.ready;
   }
 
   @override
-  void bind(GraphicsDevice graphics, Camera camera, Node target) {
+  void bind(GraphicsDevice graphics, Camera camera, Entity entity) {
     // uniforms
     graphics.uniformMatrix4("uViewMat", camera.view);
-    graphics.uniformMatrix4("uModelMat", target.transform.worldMatrix);
+    graphics.uniformMatrix4("uModelMat", entity.transform.worldMatrix);
     graphics.uniformMatrix4("uProjectionMat", camera.projection);
 
     // attributes
-    var mesh = target.meshInstance.mesh;
+    var mesh = entity.meshInstance.mesh;
     var shader = technique.defaultPass.shader;
     
     mesh.vertices.enable(graphics, shader.attributes["aPosition"]);

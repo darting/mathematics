@@ -30,12 +30,12 @@ class Renderer extends Component {
   }
 
   @override
-  void _targetAdded(Node target) {
+  void _entityAdded(Entity entity) {
     
   }
 
   @override
-  void _targetRemoved(Node target) {
+  void _entityRemoved(Entity entity) {
     // TODO: implement _targetRemoved
   }
 
@@ -44,22 +44,22 @@ class Renderer extends Component {
     // event
     // rendertarget
     
-    assertNotNull(target, "target must be not null");
-    assertNotNull(target.meshInstance, "mesh instance must be not null");
-    assertNotNull(target.meshInstance.mesh, "mesh must be not null");
+    assertNotNull(entity, "entity must be not null");
+    assertNotNull(entity.meshInstance, "mesh instance must be not null");
+    assertNotNull(entity.meshInstance.mesh, "mesh must be not null");
 
     
-    var mesh = target.meshInstance.mesh;
+    var mesh = entity.meshInstance.mesh;
     
     graphics.clear(backgroundColor);
 
     // TODO get draw calls from pool ?
     var material = sharedMaterials.first;
     
-    if(material.ready(graphics, target)) {
+    if(material.ready(graphics, entity)) {
       graphics.use(material.technique.defaultPass);
           
-      material.bind(graphics, camera, target);
+      material.bind(graphics, camera, entity);
       
       mesh._subMeshes.forEach((subMesh) {
         subMesh._indices.bind(graphics);

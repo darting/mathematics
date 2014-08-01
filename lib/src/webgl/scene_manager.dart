@@ -5,15 +5,15 @@ part of mathematics;
 
 class SceneManager {
 
-  final List<Node> roots = [];
+  final List<Entity> roots = [];
 
   List<Renderer> _renderables = [];
 
-  void add(Node root) {
+  void add(Entity root) {
     roots.add(root);
   }
 
-  void _updateNode(Node node) {
+  void _updateNode(Entity node) {
     node.components.forEach((c) {
       c.update();
       if (c is Renderer) _renderables.add(c);
