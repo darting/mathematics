@@ -32,6 +32,7 @@ part 'src/webgl/scene/game_object.dart';
 part 'src/webgl/scene/scene.dart';
 
 part 'src/webgl/primitives/cube.dart';
+part 'src/webgl/primitives/sphere.dart';
 
 part 'src/webgl/geometry/geometry.dart';
 
