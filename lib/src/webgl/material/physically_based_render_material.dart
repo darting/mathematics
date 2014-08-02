@@ -39,6 +39,11 @@ class PhysicallyBasedRenderMaterial extends Material {
 
     graphics.bindTexture("diffuseSampler", diffuseTexture);
     
+    graphics.uniformFloat("uAlbedo", albedo);
+    graphics.uniformFloat("uRoughess", roughness);
+    graphics.uniformFloat("uReflectivity", reflectivity);
+    graphics.uniformVector3("uEyePosition", camera.entity.transform.worldPosition);
+    
     mesh.vertices.enable(graphics, shader.attributes["aPosition"]);
     mesh.normals.enable(graphics, shader.attributes["aNormal"]);
     mesh.uv.enable(graphics, shader.attributes["aDiffuseUV"]);

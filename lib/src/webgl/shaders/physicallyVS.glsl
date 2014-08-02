@@ -11,8 +11,10 @@ uniform mat4 uProjectionMat;
 attribute vec2 aDiffuseUV;
 varying vec2 vDiffuseUV;
 
-varying vec4 vPosition;
-varying vec3 vLighting;
+uniform vec3 uEyePosition;
+
+varying vec3 vWorldPosition;
+varying vec3 vNormal;
 
 mat3 getNormalMat(mat4 mat) {
     return mat3(mat[0][0], mat[1][0], mat[2][0], mat[0][1], mat[1][1], mat[2][1], mat[0][2], mat[1][2], mat[2][2]);
@@ -23,8 +25,9 @@ void main(void) {
     
     modelViewMat = uViewMat * uModelMat;
     
-    vPosition = modelViewMat * vec4(aPosition, 1.0);
-    gl_Position = uProjectionMat * vPosition;
+    vWorldPosition = vec3(uModelMat * vec4(aPosition, 1.0));
+    
+    gl_Position = uProjectionMat * modelViewMat * vec4(aPosition, 1.0);
     
     mat3 normalMat = getNormalMat(modelViewMat);
     vec3 normal = normalize(normalMat * aNormal);
@@ -35,6 +38,6 @@ void main(void) {
     highp float directional = max(dot(normal, directionalVector), 0.0);
     vec3 lighting = ambientLight + (directionalLightColor * directional);
     
-    vLighting = lighting;
     vDiffuseUV = aDiffuseUV;
+    vNormal = normal;
 }

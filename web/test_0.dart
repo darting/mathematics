@@ -10,6 +10,7 @@ void main() {
   var assets = engine.assets;
 
   assets.addMesh(new CubeMesh("cube"));
+  assets.addMesh(new SphereMesh("sphere", radius: 0.6));
   assets.loadTexture("res/obj/skin.jpg", id: "skin");
   
   new ObjLoader().load("res/obj/head.o", "head").then((m) {
@@ -35,9 +36,9 @@ void main() {
   
   var cube = new GameObject("cube")
       ..addComponent(new Transform())
-      ..addComponent(new MeshInstance(assets.getMesh("cube")))
+      ..addComponent(new MeshInstance(assets.getMesh("sphere")))
       ..addComponent(new Renderer());
-  cube.transform.translate(-1.5);
+  cube.transform.translate(-2.0);
   scene.addChild(cube);
 
   var speed = 1000;
