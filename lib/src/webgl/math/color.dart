@@ -38,6 +38,10 @@ class Color extends Vector4 {
   void set alpha(double val) {
     _elements[3] = val;
   }
+  
+  Vector4 clone() {
+    return new Color(_elements[0], _elements[1], _elements[2], _elements[3]);
+  }
 
   double get red => _elements[0];
   double get green => _elements[1];

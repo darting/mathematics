@@ -24,6 +24,13 @@ class Vector4 {
     _elements[2] = z;
     _elements[3] = w;
   }
+  
+  scale(double s) {
+    _elements[0] *= s;
+    _elements[1] *= s;
+    _elements[2] *= s;
+    _elements[3] *= s;
+  }
 
   double operator [](int i) => _elements[i];
 
@@ -54,4 +61,5 @@ class Vector4 {
   Vector4 clone() => new Vector4(_elements[0], _elements[1], _elements[2], _elements[3]);
   
   String toString() => '[${_elements[0]},${_elements[1]},${_elements[2]},${_elements[3]}]';
+  
 }
