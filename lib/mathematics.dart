@@ -38,6 +38,7 @@ part 'src/webgl/geometry/geometry.dart';
 
 part 'src/webgl/material/material.dart';
 part 'src/webgl/material/basic_material.dart';
+part 'src/webgl/material/phong_material.dart';
 part 'src/webgl/material/physically_based_render_material.dart';
 
 part 'src/webgl/math/matrix4.dart';
