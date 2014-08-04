@@ -5,8 +5,40 @@ part of mathematics;
 
 class Quaternion {
   final Float32List _elements;
+  
+  Quaternion(double x, double y, double z, double w) : _elements = new Float32List(4) {
+    _elements[0] = x;
+    _elements[1] = y;
+    _elements[2] = z;
+    _elements[3] = w;
+  }
 
   Quaternion.identity() : _elements = new Float32List(4) {
+    _elements[3] = 1.0;
+  }
+  
+  Quaternion.random(math.Random rn) : _elements = new Float32List(4) {
+    // From: "Uniform Random Rotations", Ken Shoemake, Graphics Gems III,
+    // pg. 124-132.
+    double x0 = rn.nextDouble();
+    double r1 = math.sqrt(1.0 - x0);
+    double r2 = math.sqrt(x0);
+    double t1 = math.PI*2.0 * rn.nextDouble();
+    double t2 = math.PI*2.0 * rn.nextDouble();
+    double c1 = math.cos(t1);
+    double s1 = math.sin(t1);
+    double c2 = math.cos(t2);
+    double s2 = math.sin(t2);
+    _elements[0] = s1 * r1;
+    _elements[1] = c1 * r1;
+    _elements[2] = s2 * r2;
+    _elements[3] = c2 * r2;
+  }
+  
+  void setIdentity() {
+    _elements[0] = 0.0;
+    _elements[1] = 0.0;
+    _elements[2] = 0.0;
     _elements[3] = 1.0;
   }
 
@@ -58,6 +90,30 @@ class Quaternion {
     _elements[2] = az * bw + aw * bz;
     _elements[3] = aw * bw - az * bz;
   }
+  
+  /// Rotates [v] by [this].
+  Vector3 rotate(Vector3 v) {
+    // conjugate(this) * [v,0] * this
+    double _w = _elements[3];
+    double _z = _elements[2];
+    double _y = _elements[1];
+    double _x = _elements[0];
+    double tiw = _w;
+    double tiz = -_z;
+    double tiy = -_y;
+    double tix = -_x;
+    double tx = tiw * v.x + tix * 0.0 + tiy * v.z - tiz * v.y;
+    double ty = tiw * v.y + tiy * 0.0 + tiz * v.x - tix * v.z;
+    double tz = tiw * v.z + tiz * 0.0 + tix * v.y - tiy * v.x;
+    double tw = tiw * 0.0 - tix * v.x - tiy * v.y - tiz * v.z;
+    double result_x = tw * _x + tx * _w + ty * _z - tz * _y;
+    double result_y = tw * _y + ty * _w + tz * _x - tx * _z;
+    double result_z = tw * _z + tz * _w + tx * _y - ty * _x;
+    v._elements[2] = result_z;
+    v._elements[1] = result_y;
+    v._elements[0] = result_x;
+    return v;
+  }
 
   void setFromRotation(Matrix4 m) {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -101,6 +157,35 @@ class Quaternion {
       _elements[1] = (m23 + m32) / s;
       _elements[2] = 0.25 * s;
     }
+  }
+  
+  Quaternion normalize() {
+    double l = length;
+    if (l == 0.0) {
+      return this;
+    }
+    l = 1.0 / l;
+    _elements[3] = _elements[3] * l;
+    _elements[2] = _elements[2] * l;
+    _elements[1] = _elements[1] * l;
+    _elements[0] = _elements[0] * l;
+    return this;
+  }
+  
+  double get length2 {
+    double _x = _elements[0];
+    double _y = _elements[1];
+    double _z = _elements[2];
+    double _w = _elements[3];
+    return (_x * _x) + (_y * _y) + (_z * _z) + (_w * _w);
+  }
+  
+  double get length {
+    return math.sqrt(length2);
+  }
+  
+  Quaternion clone() {
+    return new Quaternion(_elements[0], _elements[1], _elements[2], _elements[3]);
   }
 
   double operator [](int i) => _elements[i];

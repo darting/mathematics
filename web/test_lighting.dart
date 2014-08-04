@@ -44,13 +44,10 @@ void main() {
   camera.transform.translate(0.0, 1.0, 5.0);
   camera.camera.lookAt(new Vector3.zero());
   scene.addChild(camera);
-  
-//  var obj = new GameObject("cube")
-//      ..addComponent(new Transform())
-//      ..addComponent(new MeshInstance(assets.getMesh("sphere")))
-//      ..addComponent(new Renderer());
-//  obj.transform.translate(-2.0);
-//  scene.addChild(obj);
+
+  var light0 = new GameObject("light0");
+  light0
+  ..addComponent(new DirectionalLight());
 
   var speed = 1000;
   var i = 2;

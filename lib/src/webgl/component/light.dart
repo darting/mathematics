@@ -7,25 +7,23 @@ abstract class Light extends Component {
   Color color;
   double intensity;
   double range = double.MAX_FINITE;
-  
-  
+
   Texture cookie;
   int shadowType;
   double darkness;
   int resolution;
-  
+
   void bind(GraphicsDevice graphics, int lightIndex);
 }
 
 
 class DirectionalLight extends Light {
   Vector3 direction;
-  
+
   double cookieSize;
-  
+
   DirectionalLight({this.direction}) {
-    if(direction == null)
-      direction = new Vector3(0.0, 0.0, -1.0);
+    if (direction == null) direction = new Vector3(0.0, 0.0, -1.0);
   }
 
   @override
@@ -33,11 +31,30 @@ class DirectionalLight extends Light {
     direction.normalize();
     graphics.uniformFloat4("uLightData$lightIndex", direction.x, direction.y, direction.z, 1.0);
   }
+
+  StreamSubscription _worldMatrixChanged;
+
+  @override
+  _entityAdded(GameObject entity) {
+    _worldMatrixChanged = entity.on("worldMatrixChanged").listen(worldMatrixChanged);
+  }
+
+  @override
+  void _entityRemoved(GameObject entity) {
+    if (_worldMatrixChanged != null) {
+      _worldMatrixChanged.cancel();
+      _worldMatrixChanged = null;
+    }
+  }
+
+  void worldMatrixChanged(Transform transform) {
+    direction = transform.worldMatrix * direction;
+  }
 }
 
 
 class PointLight extends Light {
-  
+
   @override
   void bind(GraphicsDevice graphics, int lightIndex) {
     var position = entity.transform.worldPosition;
@@ -46,14 +63,11 @@ class PointLight extends Light {
 }
 
 
-class SpotLight extends Light {
+class SpotLight extends DirectionalLight {
   double exponent;
   double angle = 0.8;
-  Vector3 direction;
-  
-  SpotLight(this.direction) {
-    if (direction == null) direction = new Vector3(0.0, -1.0, 0.0);
-  }
+
+  SpotLight();
 
   @override
   void bind(GraphicsDevice graphics, int lightIndex) {
@@ -65,13 +79,10 @@ class SpotLight extends Light {
 }
 
 
-class HemisphericLight extends Light {
+class HemisphericLight extends DirectionalLight {
   Color groundColor = new Color.fromHex(0x0);
-  Vector3 direction;
-  
-  HemisphericLight(this.direction) {
-    if (direction == null) direction = new Vector3(0.0, 1.0, 0.0);
-  }
+
+  HemisphericLight() : super(direction: new Vector3(0.0, 1.0, 0.0));
 
   @override
   void bind(GraphicsDevice graphics, int lightIndex) {

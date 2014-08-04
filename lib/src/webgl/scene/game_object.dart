@@ -18,13 +18,18 @@ class GameObject extends Node {
 
   Transform _transform;
   Transform get transform => _transform;
-  
+
   Camera _camera;
   Camera get camera => _camera;
-  
+
+  Light _light;
+  Light get light => _light;
+
   Scene get scene => root as Scene;
 
-  GameObject(String uniqueId) : components = [], super(uniqueId);
+  GameObject(String uniqueId)
+      : components = [],
+        super(uniqueId);
 
   void addComponent(Component component) {
     _setSpecialComponent(component, component);
@@ -34,8 +39,7 @@ class GameObject extends Node {
   }
 
   void removeComponent(Component component) {
-    if(!components.contains(component))
-      throw new Exception("This component is not belong the node");
+    if (!components.contains(component)) throw new Exception("This component is not belong the node");
     _setSpecialComponent(component, null);
     components.remove(component);
     component._entities.remove(this);
@@ -51,6 +55,8 @@ class GameObject extends Node {
       _transform = value;
     } else if (component is Camera) {
       _camera = value;
+    } else if (component is Light) {
+      _light = value;
     }
   }
 
