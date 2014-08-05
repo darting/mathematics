@@ -12,9 +12,9 @@ class Renderer extends Component {
   int lightmapIndex;
   Vector4 lightmapTilingOffset;
 
-  Material get material => null;
+  //Material get material => null;
   Material get sharedMaterial => sharedMaterials.first;
-  List<Material> materials;
+  //List<Material> materials;
   List<Material> sharedMaterials;
 
   bool receiveShadows;

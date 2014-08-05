@@ -7,6 +7,8 @@ class Scene extends GameObject {
 
   final List<Camera> renderTargets = [];
   final List<Camera> cameras = [];
+  final List<Light> lights = [];
+  final Map<String, Object> dataProvider = {};
 
   Iterable<Camera> getRenderTargets() => renderTargets.where((c) => c.enabled);
   

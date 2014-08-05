@@ -4,14 +4,39 @@ part of mathematics;
 
 
 abstract class Light extends Component {
-  Color color;
-  double intensity;
+  static const int MAX_LIGHTS = 4;
+  
+  Color color = Color.white();
+  double intensity = 1.0;
   double range = double.MAX_FINITE;
 
   Texture cookie;
   int shadowType;
   double darkness;
   int resolution;
+
+  StreamSubscription _addToScene;
+  StreamSubscription _removeFromScene;
+
+  @override
+  _entityAdded(GameObject entity) {
+    super._entityAdded(entity);
+    _addToScene = entity.on("addToScene").listen((_) => entity.scene.lights.add(this));
+    _removeFromScene = entity.on("removeFromScene").listen((_) => entity.scene.lights.remove(this));
+  }
+
+  @override
+  void _entityRemoved(GameObject entity) {
+    super._entityRemoved(entity);
+    if (_addToScene != null) {
+      _addToScene.cancel();
+      _addToScene = null;
+    }
+    if (_removeFromScene != null) {
+      _removeFromScene.cancel();
+      _removeFromScene = null;
+    }
+  }
 
   void bind(GraphicsDevice graphics, int lightIndex);
 }
@@ -36,11 +61,13 @@ class DirectionalLight extends Light {
 
   @override
   _entityAdded(GameObject entity) {
+    super._entityAdded(entity);
     _worldMatrixChanged = entity.on("worldMatrixChanged").listen(worldMatrixChanged);
   }
 
   @override
   void _entityRemoved(GameObject entity) {
+    super._entityRemoved(entity);
     if (_worldMatrixChanged != null) {
       _worldMatrixChanged.cancel();
       _worldMatrixChanged = null;

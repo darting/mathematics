@@ -8,12 +8,11 @@ class DrawCallPool {
   Map<String, DrawCall> _drawCalls = {};
 
   void register(Renderer renderer) {
-    var material = renderer.sharedMaterial;
     var entity = renderer.entity;
     var key = identity(entity);
     var drawCall = _drawCalls[key];
     if (drawCall == null) {
-      drawCall = new DrawCall(material);
+      drawCall = new DrawCall(renderer);
       _drawCalls[key] = drawCall;
     }
     drawCall.combine(renderer.entity);
@@ -29,7 +28,7 @@ class DrawCallPool {
   }
 
   String identity(GameObject entity) {
-    return entity.renderer.sharedMaterial.hashCode.toString();
+    return entity.renderer.hashCode.toString();
 //    var material = entity.renderer.sharedMaterial;
 //    return entity.isStatic ? material.hashCode.toString() : "${material.hashCode}_${entity.hashCode}";
   }

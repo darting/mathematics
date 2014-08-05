@@ -13,7 +13,8 @@ class BasicMaterial extends Material {
     technique.add(new Pass("default", new Shader.load("packages/mathematics/src/webgl/shaders/basic")));
   }
 
-  bool ready(GraphicsDevice graphics, GameObject entity) {
+  @override
+  bool ready(GraphicsDevice graphics, Renderer renderer) {
     var shader = technique.defaultPass.shader;
     shader.prepare(graphics);
     return shader.ready;

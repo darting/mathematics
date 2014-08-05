@@ -47,7 +47,12 @@ void main() {
 
   var light0 = new GameObject("light0");
   light0
+  ..addComponent(new Transform())
+  ..addComponent(new MeshInstance(assets.getMesh("sphere")))
+  ..addComponent(new Renderer(material: new PhongMaterial()))
   ..addComponent(new DirectionalLight());
+  light0.transform.translate(0.0, 0.0, 5.0);
+  scene.addChild(light0);
 
   var speed = 1000;
   var i = 2;
