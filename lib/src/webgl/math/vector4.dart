@@ -18,18 +18,20 @@ class Vector4 {
 
   Vector4.zero() : _elements = new Float32List(4);
 
-  void setValues(double x, double y, double z, double w) {
+  Vector4 setValues(double x, double y, double z, double w) {
     _elements[0] = x;
     _elements[1] = y;
     _elements[2] = z;
     _elements[3] = w;
+    return this;
   }
   
-  scale(double s) {
+  Vector4 scale(double s) {
     _elements[0] *= s;
     _elements[1] *= s;
     _elements[2] *= s;
     _elements[3] *= s;
+    return this;
   }
 
   double operator [](int i) => _elements[i];

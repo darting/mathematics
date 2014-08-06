@@ -63,9 +63,10 @@ class PhongMaterial extends Material {
       var light = scene.lights[i];
       light.bind(graphics, i);
 
-      var color = light.color;
+      var color = light.diffuseColor;
       var intensity = light.intensity;
-      graphics.uniformFloat4("uLightColor${i}", color.red * intensity, color.green * intensity, color.blue * intensity, light.range);
+      graphics.uniformFloat4("uLightDiffuse${i}", color.red * intensity, color.green * intensity, color.blue * intensity, light.range);
+      graphics.uniformColor3("uLightSpecular${i}", light.specularColor.clone().scale(light.intensity));
     }
 
     graphics.uniformVector3("uEyePosition", camera.entity.transform.worldPosition);

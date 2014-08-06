@@ -19,7 +19,8 @@ varying vec2 vDiffuseUV;
 // light 0
 #ifdef LIGHT0
 uniform vec4 uLightData0;
-uniform vec4 uLightColor0;
+uniform vec4 uLightDiffuse0;
+uniform vec3 uLightSpecular0;
   #ifdef SPOTLIGHT0
     uniform vec4 uLightDirection0;
   #endif
@@ -31,7 +32,8 @@ uniform vec4 uLightColor0;
 // light 1
 #ifdef LIGHT1
 uniform vec4 uLightData1;
-uniform vec4 uLightColor1;
+uniform vec4 uLightDiffuse1;
+uniform vec3 uLightSpecular1;
   #ifdef SPOTLIGHT1
     uniform vec4 uLightDirection1;
   #endif
@@ -43,7 +45,8 @@ uniform vec4 uLightColor1;
 // light 2
 #ifdef LIGHT2
 uniform vec4 uLightData2;
-uniform vec4 uLightColor2;
+uniform vec4 uLightDiffuse2;
+uniform vec3 uLightSpecular2;
   #ifdef SPOTLIGHT2
     uniform vec4 uLightDirection2;
   #endif
@@ -55,7 +58,8 @@ uniform vec4 uLightColor2;
 // light 3
 #ifdef LIGHT3
 uniform vec4 uLightData3;
-uniform vec4 uLightColor3;
+uniform vec4 uLightDiffuse3;
+uniform vec3 uLightSpecular3;
   #ifdef SPOTLIGHT3
     uniform vec4 uLightDirection3;
   #endif
@@ -72,7 +76,7 @@ struct LightingInfo {
   vec3 specular;
 };
 
-LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, vec3 diffuseColor, vec3 specularColor, float range) {
+LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, vec3 diffuseColor, vec3 specularColor, float range, float shininess) {
   LightingInfo result;
 
   vec3 lightVector;
@@ -119,6 +123,7 @@ void main(void) {
     vec3 diffuseBase = vec3(0.0, 0.0, 0.0);
     vec3 specularBase = vec3(0.0, 0.0, 0.0);
     float shadow = 1.0;
+    float shininess = uSpecularColor.a;
 
     #ifdef LIGHT0
         #ifdef SPOTLIGHT0
@@ -128,7 +133,12 @@ void main(void) {
         #endif
 
         #ifdef POINTDIRLIGHT0
-        LightingInfo info = computeLighting(viewDirection, normal, uLightData0, uLightColor0.rgb, uLightColor0.rgb, uLightColor0.a);
+        LightingInfo info = computeLighting(viewDirection, normal, 
+                                            uLightData0, 
+                                            uLightDiffuse0.rgb, 
+                                            uLightSpecular0,
+                                            uLightDiffuse0.a, 
+                                            shininess);
         #endif
 
         diffuseBase += info.diffuse * shadow;
@@ -143,7 +153,12 @@ void main(void) {
         #endif
 
         #ifdef POINTDIRLIGHT1
-        info = computeLighting(viewDirection, normal, uLightData1, uLightColor1.rgb, uLightColor1.rgb, uLightColor1.a);
+        info = computeLighting(viewDirection, normal, 
+                            uLightData1, 
+                            uLightDiffuse1.rgb, 
+                            uLightSpecular1,
+                            uLightDiffuse1.a, 
+                            shininess);
         #endif
 
         diffuseBase += info.diffuse * shadow;

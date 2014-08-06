@@ -3,16 +3,40 @@ part of mathematics;
 
 
 
-class Color extends Vector4 {
+class Color {
 
-  Color(double r, double g, double b, [double alpha = 1.0]) : super(r, g, b, alpha);
+  final Float32List _elements;
 
-  Color.fromList(List<num> list) : super.fromList(list) {
-    if (_elements[3] == 0.0) _elements[3] = 1.0;
+  Color.zero() : _elements = new Float32List(4);
+
+  Color(double r, double g, double b, [double alpha = 1.0]) : _elements = new Float32List(4) {
+    setValues(r, g, b, alpha);
   }
 
-  Color.fromHex(num hex) : super.zero() {
+  Color.fromHex(num hex) : _elements = new Float32List(4) {
     hexColor = hex;
+  }
+
+  Color.fromList(List<num> list) : _elements = new Float32List(4) {
+    _elements[3] = 1.0;
+    for (var i = 0; i < list.length && i < 4; i++) {
+      _elements[i] = list[i].toDouble();
+    }
+  }
+
+  Color setValues(double r, double g, double b, double alpha) {
+    _elements[0] = r;
+    _elements[1] = g;
+    _elements[2] = b;
+    _elements[3] = alpha;
+    return this;
+  }
+
+  Color scale(double s) {
+    _elements[0] *= s;
+    _elements[1] *= s;
+    _elements[2] *= s;
+    return this;
   }
 
   set hexColor(num hexColor) {
@@ -38,8 +62,8 @@ class Color extends Vector4 {
   void set alpha(double val) {
     _elements[3] = val;
   }
-  
-  Vector4 clone() {
+
+  Color clone() {
     return new Color(_elements[0], _elements[1], _elements[2], _elements[3]);
   }
 
@@ -47,8 +71,9 @@ class Color extends Vector4 {
   double get green => _elements[1];
   double get blue => _elements[2];
   double get alpha => _elements[3];
-
   
+  String toString() => 'R:${_elements[0]},G:${_elements[1]},B:${_elements[2]},A:${_elements[3]}';
+
   static Color white() => new Color(1.0, 1.0, 1.0);
   static Color black() => new Color(0.0, 0.0, 0.0);
 }

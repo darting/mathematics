@@ -1,30 +1,10 @@
 precision highp float;
 attribute vec3 aPosition;
-attribute vec3 aNormal;
-
 
 uniform mat4 uModelMat;
-
 uniform mat4 uViewMat;
 uniform mat4 uProjectionMat;
 
-varying vec4 vPosition;
-varying vec3 vNormal;
-
-mat3 getNormalMat(mat4 mat) {
-    return mat3(mat[0][0], mat[1][0], mat[2][0], mat[0][1], mat[1][1], mat[2][1], mat[0][2], mat[1][2], mat[2][2]);
-}
-
 void main(void) {
-    mat4 modelViewMat;
-    
-    modelViewMat = uViewMat * uModelMat;
-    
-    vPosition = modelViewMat * vec4(aPosition, 1.0);
-    gl_Position = uProjectionMat * vPosition;
-    
-    mat3 normalMat = getNormalMat(modelViewMat);
-    vec3 normal = normalize(normalMat * aNormal);
-    
-    vNormal = normal;
+    gl_Position = uProjectionMat * uViewMat * uModelMat * vec4(aPosition, 1.0);
 }

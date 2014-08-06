@@ -6,7 +6,8 @@ part of mathematics;
 abstract class Light extends Component {
   static const int MAX_LIGHTS = 4;
   
-  Color color = Color.white();
+  Color diffuseColor = Color.white();
+  Color specularColor = Color.white();
   double intensity = 1.0;
   double range = double.MAX_FINITE;
 
