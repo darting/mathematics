@@ -5,20 +5,37 @@ part of mathematics;
 
 class PhongMaterial extends Material {
 
+  Color diffuseColor = Color.white();
   Texture diffuseTexture;
+  Vector2 diffuseOffset;
+  Vector2 diffuseScale;
+
+  Color ambientColor;
+  Texture ambientTexture;
+
+  Color emissiveColor;
+  Texture emissiveTexture;
+
+  Color specularColor;
+  double specularPower = 1.0;
+  Texture specularTexture;
+
+  Texture bumpTexture;
+
+  Texture opacityTexture;
 
   String _defines;
   StringBuffer _definesBuff;
 
   PhongMaterial() {
     technique = new Technique();
-    _definesBuff =  new StringBuffer();
+    _definesBuff = new StringBuffer();
   }
 
   @override
   bool ready(GraphicsDevice graphics, Renderer renderer) {
     _definesBuff.clear();
-    
+
     if (diffuseTexture != null) {
       if (!diffuseTexture.ready) return false;
       _definesBuff.writeln("#define DIFFUSE");
@@ -36,7 +53,7 @@ class PhongMaterial extends Material {
         _definesBuff.writeln("#define POINTDIRLIGHT$i");
       }
     }
-    
+
     _definesBuff.writeln("#define UV1");
 
     var defines = _definesBuff.toString();
@@ -52,9 +69,14 @@ class PhongMaterial extends Material {
   @override
   void bind(GraphicsDevice graphics, Camera camera, GameObject entity) {
     graphics.uniformMatrix4("uModelMat", entity.transform.worldMatrix);
-
+    
     var mesh = entity.meshInstance.mesh;
     var shader = technique.defaultPass.shader;
+
+    if (ambientColor != null) graphics.uniformColor3("uAmbientColor", ambientColor);
+    if (diffuseColor != null) graphics.uniformFloat4("uDiffuseColor", diffuseColor.red, diffuseColor.green, diffuseColor.blue, diffuseColor.alpha * entity.renderer.visibility);
+    if (emissiveColor != null) graphics.uniformColor3("uEmissiveColor", emissiveColor);
+    if (specularColor != null) graphics.uniformFloat4("uSpecularColor", specularColor.red, specularColor.green, specularColor.blue, specularPower);
 
     if (diffuseTexture != null) graphics.bindTexture("diffuseSampler", diffuseTexture);
 
@@ -76,8 +98,6 @@ class PhongMaterial extends Material {
     mesh.uv.enable(graphics, shader.attributes["aUV"]);
   }
 }
-
-
 
 
 

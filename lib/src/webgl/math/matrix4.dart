@@ -509,6 +509,28 @@ class Matrix4 {
     ref[2] = _elements[14];
   }
 
+  /**
+   * Rotate [ref] by the absolute rotation of [this]
+   */
+  Vector3 absoluteRotate(Vector3 ref) {
+    double m00 = _elements[0].abs();
+    double m01 = _elements[4].abs();
+    double m02 = _elements[8].abs();
+    double m10 = _elements[1].abs();
+    double m11 = _elements[5].abs();
+    double m12 = _elements[9].abs();
+    double m20 = _elements[2].abs();
+    double m21 = _elements[6].abs();
+    double m22 = _elements[10].abs();
+    double x = ref.x;
+    double y = ref.y;
+    double z = ref.z;
+    ref.x = x * m00 + y * m01 + z * m02 + 0.0 * 0.0;
+    ref.y = x * m10 + y * m11 + z * m12 + 0.0 * 0.0;
+    ref.z = x * m20 + y * m21 + z * m22 + 0.0 * 0.0;
+    return ref;
+  }
+
   double operator [](int i) => _elements[i];
 
   void operator []=(int i, double v) {

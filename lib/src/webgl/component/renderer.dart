@@ -12,6 +12,8 @@ class Renderer extends Component {
   int lightmapIndex;
   Vector4 lightmapTilingOffset;
 
+  double visibility = 1.0;
+  
   //Material get material => null;
   Material get sharedMaterial => sharedMaterials.first;
   //List<Material> materials;

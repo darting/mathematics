@@ -4,8 +4,11 @@ part of mathematics;
 
 
 class BasicMaterial extends Material {
+  
+  Color diffuseColor;
+  
   BasicMaterial([Color color]) {
-    this.color = color;
+    diffuseColor = color;
     technique = new Technique();
     technique.add(new Pass("default", new Shader.load("packages/mathematics/src/webgl/shaders/basic")));
   }
@@ -21,8 +24,8 @@ class BasicMaterial extends Material {
   void bind(GraphicsDevice graphics, Camera camera, GameObject entity) {
     graphics.uniformMatrix4("uModelMat", entity.transform.worldMatrix);
     
-    if(color == null) color = Color.white();
-    graphics.uniformColor3("uColor", color);
+    if(diffuseColor == null) diffuseColor = Color.white();
+    graphics.uniformColor3("uColor", diffuseColor);
 
     // attributes
     var mesh = entity.meshInstance.mesh;

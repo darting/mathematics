@@ -49,7 +49,7 @@ class DirectionalLight extends Light {
   double cookieSize;
 
   DirectionalLight({this.direction}) {
-    if (direction == null) direction = new Vector3(0.0, 0.0, -1.0);
+    if (direction == null) direction = new Vector3(0.0, 0.0, 1.0);
   }
 
   @override
@@ -76,7 +76,8 @@ class DirectionalLight extends Light {
   }
 
   void worldMatrixChanged(Transform transform) {
-    direction = transform.worldMatrix * direction;
+    direction.setValues(0.0, 0.0, 1.0);
+    transform.rotation.rotate(direction);
   }
 }
 

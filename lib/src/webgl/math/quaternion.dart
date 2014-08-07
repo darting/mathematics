@@ -48,6 +48,16 @@ class Quaternion {
     _elements[2] = val._elements[2];
     _elements[3] = val._elements[3];
   }
+  
+  Quaternion setRotationAxis(Vector3 axis, double rad) {
+    rad *= 0.5;
+    var sin = math.sin(rad);
+    _elements[3] = math.cos(rad);
+    _elements[0] = axis.x * sin;
+    _elements[1] = axis.y * sin;
+    _elements[2] = axis.z * sin;
+    return this;
+  }
 
   void rotateX(double rad) {
     rad *= 0.5;

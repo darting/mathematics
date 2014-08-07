@@ -18,11 +18,12 @@ class Assets {
   Texture getTexture(String id) => _textures[id];
 
   Texture loadTexture(String url, {String id, int target: gl.TEXTURE_2D, int type: gl.UNSIGNED_BYTE, int format: gl.RGBA, Sampler sampler, bool usesMipMaps: false, bool flip: false}) {
-
-    if (_textures.containsKey(url)) return _textures[url];
+    id = or(id, url);
+    
+    if (_textures.containsKey(id)) return _textures[id];
 
     var ctx = Engine._sharedInstance._graphics._ctx;
-    var texture = new Texture._(or(id, url));
+    var texture = new Texture._(id);
     texture.source = url;
     texture.target = target;
     texture.type = type;
@@ -55,8 +56,9 @@ class Assets {
       }
       ctx.bindTexture(texture.target, null);
       texture._ready = true;
-      _textures[texture.id] = texture;
     });
+    
+    _textures[texture.id] = texture;
     return texture;
   }
 

@@ -54,4 +54,5 @@ void main(void) {
     mat3 normalMat = getNormalMat(uViewMat * uModelMat);
 
     vNormal = normalize(normalMat * aNormal);
+    //vNormal = normalize(vec3(uModelMat * vec4(aNormal, 0.0)));
 }

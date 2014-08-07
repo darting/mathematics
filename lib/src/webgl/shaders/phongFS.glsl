@@ -3,6 +3,9 @@ precision highp int;
 
 uniform vec3 uEyePosition;
 
+uniform vec3 uAmbientColor;
+uniform vec4 uDiffuseColor;
+uniform vec3 uEmissiveColor;
 uniform vec4 uSpecularColor;
 
 varying vec3 vNormal;
@@ -82,24 +85,29 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, ve
   vec3 lightVector;
   float attenuation = 1.0;
   if (lightData.w == 0.0) {
+    // point light
     vec3 direction = lightData.xyz - vWorldPosition;
-    attenuation =  max(0.0, 1.0 - length(direction) / range);
+    //attenuation =  max(0.0, 1.0 - length(direction) / range);
     lightVector = normalize(direction);
   } else {
+    // directional light
     lightVector = normalize(-lightData.xyz);
   }
 
   // diffuse
-  float ndl = max(0., dot(normal, lightVector));
+  float ndl = max(0.0, dot(normal, lightVector));
+  result.diffuse = ndl * diffuseColor * attenuation;
+
 
   // Specular
-  vec3 worldAngle = normalize(viewDirection + lightVector);
-  float specComp = max(0., dot(normal, worldAngle));
-  specComp = pow(specComp, max(1., uSpecularColor.a));
-
-  result.diffuse = ndl * diffuseColor * attenuation;
-  result.specular = specComp * specularColor * attenuation;
-
+  if(ndl > 0.0) {
+    vec3 worldAngle = normalize(viewDirection + lightVector);
+    float specComp = max(0.0, dot(normal, worldAngle));
+    specComp = pow(specComp, max(1.0, shininess));
+    result.specular = specComp * specularColor * attenuation;
+  } else {
+    result.specular = vec3(0.0, 0.0, 0.0);
+  }
   return result;
 }
 
@@ -109,13 +117,17 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, ve
 
 
 void main(void) {
-    vec4 baseColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+    vec3 diffuseColor = uDiffuseColor.rgb;
+    float alpha = uDiffuseColor.a;
+
+    vec4 baseColor = vec4(1.0, 1.0, 1.0, 1.0);
 
     #ifdef DIFFUSE
-    baseColor = texture2D(diffuseSampler, vDiffuseUV);
+        baseColor = texture2D(diffuseSampler, vDiffuseUV);
     #endif
 
-    float alpha = baseColor.a;
+
     vec3 viewDirection = normalize(uEyePosition - vWorldPosition);
     vec3 normal = vNormal;
     
@@ -165,11 +177,12 @@ void main(void) {
         specularBase += info.specular * shadow;
     #endif
 
-    vec3 finalDiffuse = diffuseBase * baseColor.rgb;
+    vec3 finalDiffuse = clamp(diffuseBase * diffuseColor, 0.0, 1.0) * baseColor.rgb;
     vec3 finalSpecular = specularBase;
 
     
-    gl_FragColor = vec4(finalDiffuse.rgb + finalSpecular, alpha);
+    gl_FragColor = vec4(finalDiffuse + finalSpecular, alpha);
+    //gl_FragColor = vec4(finalSpecular, alpha);
 }
 
 

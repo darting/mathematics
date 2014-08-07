@@ -4,11 +4,6 @@ part of mathematics;
 
 
 abstract class Material {
-  Color color;
-
-  Texture diffuseTexture;
-  Vector2 diffuseOffset;
-  Vector2 diffuseScale;
 
   Technique technique;
 

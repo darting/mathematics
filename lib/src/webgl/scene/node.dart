@@ -66,4 +66,7 @@ abstract class Node extends EventTrigger implements Disposable {
   void dispose() {
     cancelSubscriptions();
   }
+  
+  @override
+  String toString() => uniqueId;
 }
