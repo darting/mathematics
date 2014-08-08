@@ -72,15 +72,15 @@ class PhongMaterial extends Material {
     
     var mesh = entity.meshInstance.mesh;
     var shader = technique.defaultPass.shader;
+    var scene = entity.scene;
 
-    if (ambientColor != null) graphics.uniformColor3("uAmbientColor", ambientColor);
+    if (ambientColor != null) graphics.uniformColor3("uAmbientColor", ambientColor * scene.ambientColor);
     if (diffuseColor != null) graphics.uniformFloat4("uDiffuseColor", diffuseColor.red, diffuseColor.green, diffuseColor.blue, diffuseColor.alpha * entity.renderer.visibility);
     if (emissiveColor != null) graphics.uniformColor3("uEmissiveColor", emissiveColor);
     if (specularColor != null) graphics.uniformFloat4("uSpecularColor", specularColor.red, specularColor.green, specularColor.blue, specularPower);
 
     if (diffuseTexture != null) graphics.bindTexture("diffuseSampler", diffuseTexture);
 
-    var scene = entity.scene;
     for (var i = 0; i < scene.lights.length && i < Light.MAX_LIGHTS; i++) {
       var light = scene.lights[i];
       light.bind(graphics, i);

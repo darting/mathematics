@@ -15,6 +15,8 @@ class Scene extends GameObject {
   Camera get mainCamera => cameras.firstWhere((c) => c.enabled);
 
   DrawCallPool _drawCalls = new DrawCallPool();
+  
+  Color ambientColor = Color.white();
 
   Scene() : super("Scene") {
     root = this;

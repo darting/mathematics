@@ -6,12 +6,12 @@ attribute vec3 aNormal;
 uniform mat4 uModelMat;
 uniform mat4 uViewMat;
 uniform mat4 uProjectionMat;
+uniform vec3 uEyePosition;
 
 
 attribute vec2 aUV;
 varying vec2 vDiffuseUV;
 
-uniform vec3 uEyePosition;
 
 varying vec3 vWorldPosition;
 varying vec3 vNormal;

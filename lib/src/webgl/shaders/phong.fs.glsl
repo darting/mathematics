@@ -106,9 +106,8 @@ LightingInfo computeSpotLighting(vec3 viewDirection, vec3 normal, vec3 position,
         float ndl = max(0.0, dot(normal, -lightDirection.xyz));
 
         // Specular
-        vec3 angleW = normalize(viewDirection - lightDirection.xyz);
-        float specComp = max(0.0, dot(normal, angleW));
-        specComp = pow(specComp, range);
+        vec3 H = normalize(viewDirection - lightDirection.xyz); //reflect(-lightVector.xyz, normal);
+        float specComp = pow(max(0.0, dot(normal, H)), range);
 
         result.diffuse = ndl * spotAtten * diffuseColor * attenuation;
         result.specular = specComp * specularColor * spotAtten * attenuation;
@@ -148,8 +147,8 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position,
 
     // Specular
     if(ndl >= 0.0) {
-        vec3 H = reflect(-lightVector, normal);
-        float specular = pow(max(0.0, dot(normal, H)), shininess);
+        vec3 R = reflect(-lightVector, normal);
+        float specular = pow(max(0.0, dot(normal, R)), shininess);
         result.specular = specular * specularColor * attenuation;
     } else {
         result.diffuse = vec3(0.0);
@@ -158,6 +157,22 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position,
     return result;
 }
 
+
+LightingInfo computeHemisphericLighting(vec3 viewDirection, vec3 normal, vec4 lightData, vec3 diffuseColor, vec3 specularColor, vec3 groundColor, float shininess) {
+    LightingInfo result;
+
+    // Diffuse
+    float ndl = dot(normal, lightData.xyz) * 0.5 + 0.5;
+
+    // Specular
+    vec3 H = normalize(viewDirection + lightData.xyz);
+    float specular = pow(max(0.0, dot(normal, H)), shininess);
+
+    result.diffuse = mix(groundColor, diffuseColor, ndl);
+    result.specular = specular * specularColor;
+
+    return result;
+}
 
 
 
@@ -183,7 +198,9 @@ void main(void) {
     vec3 diffuseBase = vec3(0.0, 0.0, 0.0);
     vec3 specularBase = vec3(0.0, 0.0, 0.0);
     float shadow = 1.0;
+    vec3 specularColor = uSpecularColor.rgb;
     float shininess = uSpecularColor.a;
+    vec3 emissiveColor = uEmissiveColor;
 
     #ifdef LIGHT0
         #ifdef SPOTLIGHT0
@@ -199,6 +216,13 @@ void main(void) {
         #endif
 
         #ifdef HEMILIGHT0
+        LightingInfo info = computeHemisphericLighting(viewDirection, 
+                                            normal,
+                                            uLightData0, 
+                                            uLightDiffuse0.rgb, 
+                                            uLightSpecular0,
+                                            uLightGround0, 
+                                            shininess);
         #endif
 
         #ifdef POINTDIRLIGHT0
@@ -231,6 +255,13 @@ void main(void) {
         #endif
 
         #ifdef HEMILIGHT1
+        info = computeHemisphericLighting(viewDirection, 
+                                            normal,
+                                            uLightData1, 
+                                            uLightDiffuse1.rgb, 
+                                            uLightSpecular1,
+                                            uLightGround1, 
+                                            shininess);
         #endif
 
         #ifdef POINTDIRLIGHT1
@@ -247,10 +278,89 @@ void main(void) {
         diffuseBase += info.diffuse * shadow;
         specularBase += info.specular * shadow;
     #endif
+    
+    #ifdef LIGHT2
+        #ifdef SPOTLIGHT2
+        info = computeSpotLighting(viewDirection, 
+                                normal,
+                                position,
+                                uLightData2, 
+                                uLightDirection2,
+                                uLightDiffuse2.rgb, 
+                                uLightSpecular2,
+                                uLightDiffuse2.a, 
+                                shininess);
+        #endif
+
+        #ifdef HEMILIGHT2
+        info = computeHemisphericLighting(viewDirection, 
+                                            normal,
+                                            uLightData2, 
+                                            uLightDiffuse2.rgb, 
+                                            uLightSpecular2,
+                                            uLightGround2, 
+                                            shininess);
+        #endif
+
+        #ifdef POINTDIRLIGHT2
+        info = computeLighting(viewDirection, 
+                            normal,
+                            position,
+                            uLightData2, 
+                            uLightDiffuse2.rgb, 
+                            uLightSpecular2,
+                            uLightDiffuse2.a, 
+                            shininess);
+        #endif
+
+        diffuseBase += info.diffuse * shadow;
+        specularBase += info.specular * shadow;
+    #endif
 
 
-    vec3 finalDiffuse = clamp(diffuseBase * diffuseColor, 0.0, 1.0) * baseColor.rgb;
-    vec3 finalSpecular = specularBase;
+    #ifdef LIGHT3
+        #ifdef SPOTLIGHT3
+        info = computeSpotLighting(viewDirection, 
+                                normal,
+                                position,
+                                uLightData3, 
+                                uLightDirection3,
+                                uLightDiffuse3.rgb, 
+                                uLightSpecular3,
+                                uLightDiffuse3.a, 
+                                shininess);
+        #endif
+
+        #ifdef HEMILIGHT3
+        info = computeHemisphericLighting(viewDirection, 
+                                            normal,
+                                            uLightData3, 
+                                            uLightDiffuse3.rgb, 
+                                            uLightSpecular3,
+                                            uLightGround3, 
+                                            shininess);
+        #endif
+
+        #ifdef POINTDIRLIGHT3
+        info = computeLighting(viewDirection, 
+                            normal,
+                            position,
+                            uLightData3, 
+                            uLightDiffuse3.rgb, 
+                            uLightSpecular3,
+                            uLightDiffuse3.a, 
+                            shininess);
+        #endif
+
+        diffuseBase += info.diffuse * shadow;
+        specularBase += info.specular * shadow;
+    #endif
+
+    
+
+
+    vec3 finalDiffuse = clamp(diffuseBase * diffuseColor + uAmbientColor + emissiveColor, 0.0, 1.0) * baseColor.rgb;
+    vec3 finalSpecular = specularBase * specularColor;
 
     
     gl_FragColor = vec4(finalDiffuse + finalSpecular, alpha);

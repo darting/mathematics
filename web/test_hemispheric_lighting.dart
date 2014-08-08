@@ -70,40 +70,30 @@ void main() {
   camera.camera.lookAt(new Vector3.zero());
   scene.addChild(camera);
 
-  var lightColor0 = new Color(1.0, 1.0, 1.0);
+  var lightColor0 = new Color(1.0, 0.0, 0.0);
   var light0 = new GameObject("light0");
   light0
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
     ..addComponent(new Renderer(material: new BasicMaterial(lightColor0)))
-    ..addComponent(new PointLight()..diffuseColor=lightColor0..intensity=0.2);
+    ..addComponent(new HemisphericLight()
+                      ..diffuseColor=lightColor0
+                      ..groundColor=new Color(0.0, 0.0, 1.0)
+                      ..intensity=0.5);
   light0.transform.translate(-1.0, 1.0, 1.0);
   scene.addChild(light0);
-
-  var lightColor1 = new Color(1.0, 1.0, 1.0);
-  var light1 = new GameObject("light1");
-  light1
-    ..addComponent(new Transform())
-    ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor1)))
-    ..addComponent(new SpotLight()..diffuseColor = lightColor1..specularColor = new Color(1.0, 1.0, 0.0));
-  light1.transform.translate(1.0, 1.0, 1.0);
-  light1.transform.rotateY(math.PI / 4);
-  light1.transform.rotateZ(math.PI / 3);
-  scene.addChild(light1);
 
   var speed = 1000;
   var i = 2;
 
   engine.enterFrame = () {
-//    camera.transform.setTranslation(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
-//    camera.camera.lookAt(new Vector3.zero());
-    light0.transform.setTranslation(math.cos(engine.totalTime / speed) * 2.0, 1.0, math.sin(engine.totalTime / speed) * 2.0);
-    light1.transform.rotateY(engine.elapsedTime * 0.001);
+    camera.transform.setTranslation(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
+    camera.camera.lookAt(new Vector3.zero());
 //    sphere.transform.rotateY(0.01);
 //    var cos = math.cos(engine.totalTime / speed) * 2.0;
 //    var sin = math.sin(engine.totalTime / speed) * 2.0;
 //    light1.transform.setTranslation(sin, cos, 0.0);
+//    light0.transform.rotateY(engine.elapsedTime * 0.001);
   };
   engine.run();
 }

@@ -39,6 +39,10 @@ class Color {
     return this;
   }
 
+  Color operator *(Color other) {
+    return new Color(_elements[0] * other.red, _elements[1] * other.green, _elements[2] * other.blue, _elements[3] * other.alpha);
+  }
+  
   set hexColor(num hexColor) {
     var h = hexColor.floor().toInt();
     _elements[0] = ((h & 0xFF0000) >> 16) / 255;

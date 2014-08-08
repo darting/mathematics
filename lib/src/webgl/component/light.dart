@@ -94,7 +94,7 @@ class PointLight extends Light {
 
 class SpotLight extends DirectionalLight {
   double exponent = 3.0;
-  double angle = 0.8;
+  double angle = 1.0;
 
   SpotLight();
 
@@ -120,4 +120,10 @@ class HemisphericLight extends DirectionalLight {
     var color = groundColor.clone().scale(intensity);
     graphics.uniformFloat3("uLightGround$lightIndex", color.red, color.green, color.blue);
   }
+  
+  @override
+  void worldMatrixChanged(Transform transform) {
+      direction.setValues(0.0, 1.0, 0.0);
+      transform.worldMatrix.rotateRef(direction);
+    }
 }

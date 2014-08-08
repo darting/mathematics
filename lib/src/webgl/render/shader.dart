@@ -26,12 +26,12 @@ class Shader implements Disposable {
   }
 
   /**
-   * vertex source file:   [url]VS.glsl
-   * fragment source file: [url]FS.glsl
+   * vertex source file:   [url].vs.glsl
+   * fragment source file: [url].fs.glsl
    **/
   Shader.load(String url, {String common: ""}) {
-    Future.wait([html.HttpRequest.getString("${url}VS.glsl"), 
-                 html.HttpRequest.getString("${url}FS.glsl")]).then((r) {
+    Future.wait([html.HttpRequest.getString("${url}.vs.glsl"), 
+                 html.HttpRequest.getString("${url}.fs.glsl")]).then((r) {
       _vertSrc = r[0];
       _fragSrc = r[1];
       _commonSrc = common;
