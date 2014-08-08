@@ -75,7 +75,7 @@ void main() {
     ..addComponent(new MeshInstance(assets.getMesh("light")))
     ..addComponent(new Renderer(material: new BasicMaterial(lightColor1)))
     ..addComponent(new DirectionalLight()..diffuseColor = lightColor1..specularColor = new Color(1.0, 1.0, 0.0));
-  //light1.transform.rotateY(math.PI / 2);
+  light1.transform.rotateY(math.PI / 4);
   scene.addChild(light1);
 
   var speed = 1000;

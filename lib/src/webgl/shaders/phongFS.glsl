@@ -2,7 +2,6 @@ precision highp float;
 precision highp int;
 
 uniform vec3 uEyePosition;
-uniform mat4 uViewMat;
 
 uniform vec3 uAmbientColor;
 uniform vec4 uDiffuseColor;
@@ -11,8 +10,6 @@ uniform vec4 uSpecularColor;
 
 varying vec3 vNormal;
 varying vec3 vWorldPosition;
-
-varying vec4 vEyeSpacePosition;
 
 
 
@@ -87,40 +84,28 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position, vec
 
   LightingInfo result;
 
-  vec3 lightVector;
+  vec3 lightDirection;
   float attenuation = 1.0;
   if (lightData.w == 0.0) {
     // point light
     vec3 direction = lightData.xyz - position;
     attenuation =  max(0.0, 1.0 - length(direction) / range);
-    lightVector = normalize(direction);
+    lightDirection = normalize(direction);
   } else {
     // directional light
-    //lightVector = -lightData.xyz;
-    lightVector = -normalize((uViewMat * vec4(lightData.xyz, 0.0)).xyz);
+    lightDirection = -lightData.xyz;
   }
 
   // diffuse
-  float ndl = max(0.0, dot(normal, lightVector));
+  float ndl = max(0.0, dot(normal, lightDirection));
   result.diffuse = ndl * diffuseColor * attenuation;
-
 
   // Specular
   if(ndl >= 0.0) {
-  
-    vec3 H = normalize(viewDirection + lightVector);
-    H = reflect(-lightVector, normal);
-    float specComp = pow(max(0.0, dot(normal, H)), shininess);
-
-    // vec3 worldAngle = normalize(viewDirection + lightVector);
-    // float specComp = max(0.0, dot(normal, worldAngle));
-    // specComp = pow(specComp, max(1.0, shininess));
-
-    result.specular = specComp * specularColor * attenuation;
+    vec3 H = reflect(-lightDirection, normal);
+    float specular = pow(max(0.0, dot(normal, H)), shininess);
+    result.specular = specular * specularColor * attenuation;
   }
-  // } else {
-  //   result.specular = vec3(0.0, 0.0, 0.0);
-  // }
   return result;
 }
 
@@ -143,12 +128,7 @@ void main(void) {
 
     vec3 viewDirection = normalize(uEyePosition - vWorldPosition);
     vec3 position = vWorldPosition;
-    vec3 normal = vNormal;
-
-    vec3 eye = vec3(uViewMat * vec4(uEyePosition, 1.0));
-    position = vEyeSpacePosition.xyz;
-    viewDirection = normalize(eye - position);
-
+    vec3 normal = normalize(vNormal);
     
 
     vec3 diffuseBase = vec3(0.0, 0.0, 0.0);

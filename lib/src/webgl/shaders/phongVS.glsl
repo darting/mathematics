@@ -23,7 +23,6 @@ attribute vec2 aUV2;
 
 
 varying vec3 vWorldPosition;
-varying vec4 vEyeSpacePosition;
 varying vec3 vNormal;
 
 #ifdef DIFFUSE
@@ -37,8 +36,6 @@ mat3 getNormalMat(mat4 mat) {
 void main(void) {
     
     vWorldPosition = (uModelMat * vec4(aPosition, 1.0)).xyz;
-
-    vEyeSpacePosition = uViewMat * vec4(vWorldPosition, 1.0);
     
     gl_Position = uProjectionMat * uViewMat * vec4(vWorldPosition, 1.0);
 
