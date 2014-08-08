@@ -16,8 +16,8 @@ class PhongMaterial extends Material {
   Color emissiveColor;
   Texture emissiveTexture;
 
-  Color specularColor;
-  double specularPower = 1.0;
+  Color specularColor = Color.white();
+  double specularPower = 10.0;
   Texture specularTexture;
 
   Texture bumpTexture;
@@ -92,6 +92,11 @@ class PhongMaterial extends Material {
     }
 
     graphics.uniformVector3("uEyePosition", camera.entity.transform.worldPosition);
+
+    Matrix4 normalMat = camera.view * entity.transform.worldMatrix;
+    normalMat.invert();
+    normalMat.transpose();
+    graphics.uniformMatrix4("uNormalMat", normalMat);
 
     mesh.vertices.enable(graphics, shader.attributes["aPosition"]);
     mesh.normals.enable(graphics, shader.attributes["aNormal"]);

@@ -11,6 +11,7 @@ abstract class Camera extends Component {
   Matrix4 _view;
   Matrix4 _projection;
   Matrix4 _viewProjection;
+  Matrix4 _normal;
 
   Vector3 target;
   Vector3 upVector = WORLD_UP;

@@ -2,6 +2,7 @@ precision highp float;
 precision highp int;
 
 uniform vec3 uEyePosition;
+uniform mat4 uViewMat;
 
 uniform vec3 uAmbientColor;
 uniform vec4 uDiffuseColor;
@@ -10,6 +11,8 @@ uniform vec4 uSpecularColor;
 
 varying vec3 vNormal;
 varying vec3 vWorldPosition;
+
+varying vec4 vEyeSpacePosition;
 
 
 
@@ -79,19 +82,22 @@ struct LightingInfo {
   vec3 specular;
 };
 
-LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, vec3 diffuseColor, vec3 specularColor, float range, float shininess) {
+LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position, vec4 lightData, 
+                             vec3 diffuseColor, vec3 specularColor, float range, float shininess) {
+
   LightingInfo result;
 
   vec3 lightVector;
   float attenuation = 1.0;
   if (lightData.w == 0.0) {
     // point light
-    vec3 direction = lightData.xyz - vWorldPosition;
-    //attenuation =  max(0.0, 1.0 - length(direction) / range);
+    vec3 direction = lightData.xyz - position;
+    attenuation =  max(0.0, 1.0 - length(direction) / range);
     lightVector = normalize(direction);
   } else {
     // directional light
-    lightVector = normalize(-lightData.xyz);
+    //lightVector = -lightData.xyz;
+    lightVector = -normalize((uViewMat * vec4(lightData.xyz, 0.0)).xyz);
   }
 
   // diffuse
@@ -100,14 +106,21 @@ LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec4 lightData, ve
 
 
   // Specular
-  if(ndl > 0.0) {
-    vec3 worldAngle = normalize(viewDirection + lightVector);
-    float specComp = max(0.0, dot(normal, worldAngle));
-    specComp = pow(specComp, max(1.0, shininess));
+  if(ndl >= 0.0) {
+  
+    vec3 H = normalize(viewDirection + lightVector);
+    H = reflect(-lightVector, normal);
+    float specComp = pow(max(0.0, dot(normal, H)), shininess);
+
+    // vec3 worldAngle = normalize(viewDirection + lightVector);
+    // float specComp = max(0.0, dot(normal, worldAngle));
+    // specComp = pow(specComp, max(1.0, shininess));
+
     result.specular = specComp * specularColor * attenuation;
-  } else {
-    result.specular = vec3(0.0, 0.0, 0.0);
   }
+  // } else {
+  //   result.specular = vec3(0.0, 0.0, 0.0);
+  // }
   return result;
 }
 
@@ -129,7 +142,13 @@ void main(void) {
 
 
     vec3 viewDirection = normalize(uEyePosition - vWorldPosition);
+    vec3 position = vWorldPosition;
     vec3 normal = vNormal;
+
+    vec3 eye = vec3(uViewMat * vec4(uEyePosition, 1.0));
+    position = vEyeSpacePosition.xyz;
+    viewDirection = normalize(eye - position);
+
     
 
     vec3 diffuseBase = vec3(0.0, 0.0, 0.0);
@@ -145,7 +164,9 @@ void main(void) {
         #endif
 
         #ifdef POINTDIRLIGHT0
-        LightingInfo info = computeLighting(viewDirection, normal, 
+        LightingInfo info = computeLighting(viewDirection, 
+                                            normal,
+                                            position,
                                             uLightData0, 
                                             uLightDiffuse0.rgb, 
                                             uLightSpecular0,
@@ -157,25 +178,6 @@ void main(void) {
         specularBase += info.specular * shadow;
     #endif
 
-    #ifdef LIGHT1
-        #ifdef SPOTLIGHT1
-        #endif
-
-        #ifdef HEMILIGHT1
-        #endif
-
-        #ifdef POINTDIRLIGHT1
-        info = computeLighting(viewDirection, normal, 
-                            uLightData1, 
-                            uLightDiffuse1.rgb, 
-                            uLightSpecular1,
-                            uLightDiffuse1.a, 
-                            shininess);
-        #endif
-
-        diffuseBase += info.diffuse * shadow;
-        specularBase += info.specular * shadow;
-    #endif
 
     vec3 finalDiffuse = clamp(diffuseBase * diffuseColor, 0.0, 1.0) * baseColor.rgb;
     vec3 finalSpecular = specularBase;

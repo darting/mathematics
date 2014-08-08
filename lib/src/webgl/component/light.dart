@@ -55,7 +55,7 @@ class DirectionalLight extends Light {
   @override
   void bind(GraphicsDevice graphics, int lightIndex) {
     direction.normalize();
-    graphics.uniformFloat4("uLightData$lightIndex", direction.x, direction.y, direction.z, 1.0);
+    graphics.uniformFloat4("uLightData$lightIndex", direction.x, direction.y, direction.z, -1.0);
   }
 
   StreamSubscription _worldMatrixChanged;
@@ -76,8 +76,8 @@ class DirectionalLight extends Light {
   }
 
   void worldMatrixChanged(Transform transform) {
-    direction.setValues(0.0, 0.0, 1.0);
-    transform.rotation.rotate(direction);
+    direction.setValues(0.0, 0.0, -1.0);
+    transform.worldMatrix.rotateRef(direction);
   }
 }
 

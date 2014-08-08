@@ -30,14 +30,14 @@ void main() {
 //    head.transform.translate(0.5, -1.0);
 //    scene.addChild(head);
     
-    var material2 = new PhongMaterial();
-    material2.diffuseTexture = assets.getTexture("skin");
-    var head2 = new GameObject("head2")
-    ..addComponent(new Transform())
-    ..addComponent(new MeshInstance(m))
-    ..addComponent(new Renderer(material: material2));
-    head2.transform.translate(0.0, -1.0);
-    //scene.addChild(head2);
+//    var material2 = new PhongMaterial();
+//    material2.diffuseTexture = assets.getTexture("skin");
+//    var head2 = new GameObject("head2")
+//    ..addComponent(new Transform())
+//    ..addComponent(new MeshInstance(m))
+//    ..addComponent(new Renderer(material: material2));
+//    head2.transform.translate(0.0, -1.0);
+//    scene.addChild(head2);
   });
   
   var m = new PhongMaterial();
@@ -54,7 +54,7 @@ void main() {
   camera
       ..addComponent(new Transform())
       ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight));
-  camera.transform.translate(0.0, 1.0, 5.0);
+  camera.transform.translate(0.0, 0.0, 5.0);
   camera.camera.lookAt(new Vector3.zero());
   scene.addChild(camera);
 
@@ -75,16 +75,17 @@ void main() {
     ..addComponent(new MeshInstance(assets.getMesh("light")))
     ..addComponent(new Renderer(material: new BasicMaterial(lightColor1)))
     ..addComponent(new DirectionalLight()..diffuseColor = lightColor1..specularColor = new Color(1.0, 1.0, 0.0));
-  //light1.transform.rotateY(math.PI / 4);
+  //light1.transform.rotateY(math.PI / 2);
   scene.addChild(light1);
 
-  var speed = 5000;
+  var speed = 1000;
   var i = 2;
   
   engine.enterFrame = () {
-//    camera.transform.translate(math.cos(engine.totalTime / speed) * 5.0, 1.0, math.sin(engine.totalTime / speed) * 5.0);
-//    camera.camera.lookAt(new Vector3.zero());
-    light1.transform.rotateY(engine.elapsedTime * 0.001);
+    camera.transform.translate(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
+    camera.camera.lookAt(new Vector3.zero());
+//    light1.transform.rotateY(engine.elapsedTime * 0.001);
+//    sphere.transform.rotateY(0.01);
   };
 
   engine.run();

@@ -509,6 +509,13 @@ class Matrix4 {
     ref[2] = _elements[14];
   }
 
+  Vector3 rotateRef(Vector3 ref) {
+    ref.x = (_elements[0] * ref._elements[0]) + (_elements[4] * ref._elements[1]) + (_elements[8] * ref._elements[2]);
+    ref.y = (_elements[1] * ref._elements[0]) + (_elements[5] * ref._elements[1]) + (_elements[9] * ref._elements[2]);
+    ref.z = (_elements[2] * ref._elements[0]) + (_elements[6] * ref._elements[1]) + (_elements[10] * ref._elements[2]);
+    return ref;
+  }
+
   /**
    * Rotate [ref] by the absolute rotation of [this]
    */

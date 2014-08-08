@@ -8,6 +8,7 @@ uniform mat4 uModelMat;
 uniform mat4 uViewMat;
 uniform mat4 uProjectionMat;
 uniform vec3 uEyePosition;
+uniform mat4 uNormalMat;
 
 
 // uv
@@ -22,6 +23,7 @@ attribute vec2 aUV2;
 
 
 varying vec3 vWorldPosition;
+varying vec4 vEyeSpacePosition;
 varying vec3 vNormal;
 
 #ifdef DIFFUSE
@@ -34,7 +36,9 @@ mat3 getNormalMat(mat4 mat) {
 
 void main(void) {
     
-    vWorldPosition = vec3(uModelMat * vec4(aPosition, 1.0));
+    vWorldPosition = (uModelMat * vec4(aPosition, 1.0)).xyz;
+
+    vEyeSpacePosition = uViewMat * vec4(vWorldPosition, 1.0);
     
     gl_Position = uProjectionMat * uViewMat * vec4(vWorldPosition, 1.0);
 
@@ -51,8 +55,5 @@ void main(void) {
         vDiffuseUV = uv;
     #endif
 
-    mat3 normalMat = getNormalMat(uViewMat * uModelMat);
-
-    vNormal = normalize(normalMat * aNormal);
-    //vNormal = normalize(vec3(uModelMat * vec4(aNormal, 0.0)));
+    vNormal = normalize(vec3(uNormalMat * vec4(aNormal, 1.0)));
 }
