@@ -93,7 +93,7 @@ class PhongMaterial extends Material {
 
     graphics.uniformVector3("uEyePosition", camera.entity.transform.worldPosition);
 
-    Matrix4 normalMat = entity.transform.worldMatrix;
+    Matrix4 normalMat = entity.transform.worldMatrix.clone();
     normalMat.invert();
     normalMat.transpose();
     graphics.uniformMatrix4("uNormalMat", normalMat);

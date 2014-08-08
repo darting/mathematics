@@ -79,34 +79,83 @@ struct LightingInfo {
   vec3 specular;
 };
 
-LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position, vec4 lightData, 
-                             vec3 diffuseColor, vec3 specularColor, float range, float shininess) {
 
-  LightingInfo result;
+LightingInfo computeSpotLighting(vec3 viewDirection, vec3 normal, vec3 position, 
+                                 vec4 lightData, vec4 lightDirection, 
+                                 vec3 diffuseColor, vec3 specularColor, float range, float shininess) {
+    
+    LightingInfo result;
 
-  vec3 lightDirection;
-  float attenuation = 1.0;
-  if (lightData.w == 0.0) {
-    // point light
     vec3 direction = lightData.xyz - position;
-    attenuation =  max(0.0, 1.0 - length(direction) / range);
-    lightDirection = normalize(direction);
-  } else {
-    // directional light
-    lightDirection = -lightData.xyz;
-  }
+    vec3 lightVector = normalize(direction);
 
-  // diffuse
-  float ndl = max(0.0, dot(normal, lightDirection));
-  result.diffuse = ndl * diffuseColor * attenuation;
+    // diffuse
+    float cosAngle = max(0.0, dot(-lightDirection.xyz, lightVector));
+    float spotAtten = 0.0;
 
-  // Specular
-  if(ndl >= 0.0) {
-    vec3 H = reflect(-lightDirection, normal);
-    float specular = pow(max(0.0, dot(normal, H)), shininess);
-    result.specular = specular * specularColor * attenuation;
-  }
-  return result;
+    float angle = lightDirection.w;
+
+    if (cosAngle >= angle) {
+        float exponent = lightData.w;
+        float attenuation = max(0.0, 1.0 - length(direction) / range);
+
+        cosAngle = max(0.0, pow(cosAngle, exponent));
+        spotAtten = max(0.0, (cosAngle - angle) / (1.0 - cosAngle));
+
+        // Diffuse
+        float ndl = max(0.0, dot(normal, -lightDirection.xyz));
+
+        // Specular
+        vec3 angleW = normalize(viewDirection - lightDirection.xyz);
+        float specComp = max(0.0, dot(normal, angleW));
+        specComp = pow(specComp, range);
+
+        result.diffuse = ndl * spotAtten * diffuseColor * attenuation;
+        result.specular = specComp * specularColor * spotAtten * attenuation;
+
+        return result;
+    }
+
+    result.diffuse = vec3(0.0);
+    result.specular = vec3(0.0);
+
+    return result;
+}
+
+
+// compute point and directinal lighting
+LightingInfo computeLighting(vec3 viewDirection, vec3 normal, vec3 position, 
+                             vec4 lightData, vec3 diffuseColor, vec3 specularColor, 
+                             float range, float shininess) {
+
+    LightingInfo result;
+
+    vec3 lightVector;
+    float attenuation = 1.0;
+    if (lightData.w == 0.0) {
+        // point light
+        vec3 direction = lightData.xyz - position;
+        attenuation =  max(0.0, 1.0 - length(direction) / range);
+        lightVector = normalize(direction);
+    } else {
+        // directional light
+        lightVector = -lightData.xyz;
+    }
+
+    // diffuse
+    float ndl = max(0.0, dot(normal, lightVector));
+    result.diffuse = ndl * diffuseColor * attenuation;
+
+    // Specular
+    if(ndl >= 0.0) {
+        vec3 H = reflect(-lightVector, normal);
+        float specular = pow(max(0.0, dot(normal, H)), shininess);
+        result.specular = specular * specularColor * attenuation;
+    } else {
+        result.diffuse = vec3(0.0);
+        result.specular = vec3(0.0);
+    }
+    return result;
 }
 
 
@@ -138,6 +187,15 @@ void main(void) {
 
     #ifdef LIGHT0
         #ifdef SPOTLIGHT0
+        LightingInfo info = computeSpotLighting(viewDirection, 
+                                            normal,
+                                            position,
+                                            uLightData0, 
+                                            uLightDirection0,
+                                            uLightDiffuse0.rgb, 
+                                            uLightSpecular0,
+                                            uLightDiffuse0.a, 
+                                            shininess);
         #endif
 
         #ifdef HEMILIGHT0
@@ -159,12 +217,43 @@ void main(void) {
     #endif
 
 
+    #ifdef LIGHT1
+        #ifdef SPOTLIGHT1
+        info = computeSpotLighting(viewDirection, 
+                                normal,
+                                position,
+                                uLightData1, 
+                                uLightDirection1,
+                                uLightDiffuse1.rgb, 
+                                uLightSpecular1,
+                                uLightDiffuse1.a, 
+                                shininess);
+        #endif
+
+        #ifdef HEMILIGHT1
+        #endif
+
+        #ifdef POINTDIRLIGHT1
+        info = computeLighting(viewDirection, 
+                            normal,
+                            position,
+                            uLightData1, 
+                            uLightDiffuse1.rgb, 
+                            uLightSpecular1,
+                            uLightDiffuse1.a, 
+                            shininess);
+        #endif
+
+        diffuseBase += info.diffuse * shadow;
+        specularBase += info.specular * shadow;
+    #endif
+
+
     vec3 finalDiffuse = clamp(diffuseBase * diffuseColor, 0.0, 1.0) * baseColor.rgb;
     vec3 finalSpecular = specularBase;
 
     
     gl_FragColor = vec4(finalDiffuse + finalSpecular, alpha);
-    //gl_FragColor = vec4(finalSpecular, alpha);
 }
 
 

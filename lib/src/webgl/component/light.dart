@@ -93,7 +93,7 @@ class PointLight extends Light {
 
 
 class SpotLight extends DirectionalLight {
-  double exponent;
+  double exponent = 3.0;
   double angle = 0.8;
 
   SpotLight();
