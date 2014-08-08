@@ -5,13 +5,11 @@ part of mathematics;
 
 class Scene extends GameObject {
 
-  final List<Camera> renderTargets = [];
+  final List<RenderTargetTexture> renderTargets = [];
   final List<Camera> cameras = [];
   final List<Light> lights = [];
   final Map<String, Object> dataProvider = {};
 
-  Iterable<Camera> getRenderTargets() => renderTargets.where((c) => c.enabled);
-  
   Camera get mainCamera => cameras.firstWhere((c) => c.enabled);
 
   DrawCallPool _drawCalls = new DrawCallPool();
@@ -50,10 +48,7 @@ class Scene extends GameObject {
 
     var graphics = Engine._sharedInstance._graphics;
 
-    var renderTargets = getRenderTargets();
-    renderTargets.forEach((camera) {
-      _drawCalls.render(graphics, camera);
-    });
+//    renderTargets.forEach((renderTarget) => _drawCalls.render(graphics, camera));
 
     if (renderTargets.length > 0) graphics.restoreDefaultFramebuffer();
 
@@ -64,7 +59,7 @@ class Scene extends GameObject {
 
   void addCamera(Camera camera) {
     if (camera.renderTargetTexture != null) {
-      renderTargets.add(camera);
+      renderTargets.add(camera.renderTargetTexture);
     } else {
       cameras.add(camera);
     }

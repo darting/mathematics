@@ -6,14 +6,27 @@ part of mathematics;
 abstract class Light extends Component {
   static const int MAX_LIGHTS = 4;
   
+  static const int SHADOW_NONE = 0;
+  static const int SHADOW_HARD = 1;
+  static const int SHADOW_SOFT_VSM = 2;
+  
   Color diffuseColor = Color.white();
   Color specularColor = Color.white();
   double intensity = 1.0;
   double range = double.MAX_FINITE;
 
   Texture cookie;
-  int shadowType;
+  
+  int _shadows = SHADOW_NONE;
+  int get shadows => _shadows;
+  void set shadows(int val) {
+    _shadows = val;
+    
+  }
+  
   double darkness;
+  double shadowBias = 0.2;
+  
   int resolution;
 
   StreamSubscription _addToScene;
