@@ -50,10 +50,15 @@ class Transform extends Component {
     if (x is Vector3) {
       _position.add(x);
     } else {
-      _position.x = x;
-      _position.y = y;
-      _position.z = z;
+      _position.x += x;
+      _position.y += y;
+      _position.z += z;
     }
+    _localDirty = true;
+  }
+
+  void setTranslation(num x, num y, num z) {
+    _position.setValues(x.toDouble(), y.toDouble(), z.toDouble());
     _localDirty = true;
   }
 
