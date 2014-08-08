@@ -41,7 +41,7 @@ class PlaneMesh extends Mesh {
   }
 
 
-  PlaneMesh.fromHighMap(String url, {String name, num width: 1.0, num height: 1.0, num minHeight, num maxHeight, int subdivisions: 1}) : super(name: name) {
+  PlaneMesh.fromHighMap(String id, String url, {num width: 1.0, num height: 1.0, num minHeight, num maxHeight, int subdivisions: 1}) : super(id) {
     var img = new html.ImageElement(src: url);
     img.onLoad.listen((_) {
       var canvas = new html.CanvasElement();
@@ -52,7 +52,7 @@ class PlaneMesh extends Mesh {
       canvas.height = mh;
       ctx.drawImage(img, 0, 0);
       var buffer = ctx.getImageData(0, 0, mw, mh);
-      _createFromHightMap(width, height, subdivisions, minHeight, maxHeight, buffer, mw, mh);
+      _createFromHighMap(width, height, subdivisions, minHeight, maxHeight, buffer, mw, mh);
     });
   }
 
@@ -101,8 +101,8 @@ class PlaneMesh extends Mesh {
     }
 
     vertices = positions;
-    uv = texcoords;
-    setIndices(faces);
+    uv = uvs;
+    setIndices(indices);
     computeNormals();
   }
 
