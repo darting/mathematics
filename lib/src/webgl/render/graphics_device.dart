@@ -13,7 +13,7 @@ class GraphicsDevice {
   html.CanvasElement _renderingCanvas;
   html.CanvasElement get renderingCanvas => _renderingCanvas;
   gl.RenderingContext _ctx;
-  DeviceCapabilities _caps;
+  DeviceCapabilities caps;
   math.Rectangle _viewport;
 
   List<gl.Buffer> _vertexBuffers = [];
@@ -40,7 +40,7 @@ class GraphicsDevice {
     _ctx = _renderingCanvas.getContext3d(preserveDrawingBuffer: true);
     if (_ctx == null) throw new Exception("WebGL is not supported");
 
-    _caps = new DeviceCapabilities(_ctx);
+    caps = new DeviceCapabilities(_ctx);
     // init
     _ctx.enable(gl.DEPTH_TEST);
     _ctx.disable(gl.BLEND);
