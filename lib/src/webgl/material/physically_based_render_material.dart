@@ -22,7 +22,7 @@ class PhysicallyBasedRenderMaterial extends Material {
   }
 
   @override
-  bool ready(GraphicsDevice graphics, Surface renderer) {
+  bool ready(GraphicsDevice graphics, Surface surface) {
     if (diffuseTexture == null || !diffuseTexture.ready) return false;
 
     var shader = technique.defaultPass.shader;

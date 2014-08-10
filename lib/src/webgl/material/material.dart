@@ -14,7 +14,7 @@ abstract class Material {
    */
   int renderQueue;
   
-  bool ready(GraphicsDevice graphics, Surface renderer);
+  bool ready(GraphicsDevice graphics, Surface surface);
   
   void bind(GraphicsDevice graphics, Camera camera, GameObject entity);
   
