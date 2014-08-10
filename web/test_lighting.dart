@@ -54,7 +54,7 @@ void main() {
   cube
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("cube")))
-    ..addComponent(new Renderer(material: new PhongMaterial()));
+    ..addComponent(new Surface(material: new PhongMaterial()));
   cube.transform.translate(0.0, -1.0, 0.0);
   scene.addChild(cube);
   
@@ -62,14 +62,14 @@ void main() {
   sphere
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("sphere")))
-  ..addComponent(new Renderer(material: new PhongMaterial()));
+  ..addComponent(new Surface(material: new PhongMaterial()));
   scene.addChild(sphere);
 
   var plane = new GameObject("plane");
   plane
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("plane")))
-    ..addComponent(new Renderer(material: new PhongMaterial()));
+    ..addComponent(new Surface(material: new PhongMaterial()));
   plane.transform.translate(0.0, -1.5, 0.0);
   plane.transform.rotateX(-math.PI / 2);
   scene.addChild(plane);
@@ -79,7 +79,7 @@ void main() {
   light0
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor0)))
+    ..addComponent(new Surface(material: new BasicMaterial(lightColor0)))
     ..addComponent(new PointLight()..diffuseColor=lightColor0..specularColor=lightColor0..intensity=1.0);
   light0.transform.translate(-1.0, 1.0, 1.0);
   scene.addChild(light0);
@@ -89,7 +89,7 @@ void main() {
   light1
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor1)))
+    ..addComponent(new Surface(material: new BasicMaterial(lightColor1)))
     ..addComponent(new DirectionalLight()..diffuseColor = lightColor1..specularColor = lightColor1..intensity=0.2);
   light1.transform.translate(1.0, 1.0, 2.0);
   light1.transform.rotateY(math.PI / 4);
@@ -101,7 +101,7 @@ void main() {
   light2
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor2)))
+    ..addComponent(new Surface(material: new BasicMaterial(lightColor2)))
     ..addComponent(new PointLight()..diffuseColor=lightColor2..specularColor=lightColor2..intensity=1.0);
   light2.transform.translate(1.0, 1.0, 1.0);
   scene.addChild(light2);
@@ -111,7 +111,7 @@ void main() {
   light3
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor3)))
+    ..addComponent(new Surface(material: new BasicMaterial(lightColor3)))
     ..addComponent(new PointLight()..diffuseColor=lightColor3..specularColor=lightColor3..intensity=1.0);
   light3.transform.translate(0.0, 1.0, 1.0);
   scene.addChild(light3);

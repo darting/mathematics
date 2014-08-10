@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-class Renderer extends Component {
+class Surface extends Component {
 
   BoundingInfo _bounds;
   bool castShadows;
@@ -24,7 +24,7 @@ class Renderer extends Component {
   StreamSubscription _addToScene;
   StreamSubscription _removeFromScene;
 
-  Renderer({Material material, this.sharedMaterials}) {
+  Surface({Material material, this.sharedMaterials}) {
     if (material == null && sharedMaterials == null) {
       sharedMaterials = [new BasicMaterial()];
     } else if (sharedMaterials == null) {

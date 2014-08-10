@@ -47,7 +47,7 @@ void main() {
   sphere
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("sphere")))
-  ..addComponent(new Renderer(material: m));
+  ..addComponent(new Surface(material: m));
   scene.addChild(sphere);
 
   var camera = new GameObject("camera");
@@ -63,7 +63,7 @@ void main() {
   light0
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("light")))
-  ..addComponent(new Renderer(material: new BasicMaterial(lightColor0)))
+  ..addComponent(new Surface(material: new BasicMaterial(lightColor0)))
   ..addComponent(new DirectionalLight()..diffuseColor=new Color.fromHex(0xff0000));
   light0.transform.translate(0.0, 0.0, 1.0);
   //scene.addChild(light0);
@@ -73,7 +73,7 @@ void main() {
   light1
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Renderer(material: new BasicMaterial(lightColor1)))
+    ..addComponent(new Surface(material: new BasicMaterial(lightColor1)))
     ..addComponent(new DirectionalLight()..diffuseColor = lightColor1..specularColor = new Color(1.0, 1.0, 0.0));
   light1.transform.rotateY(math.PI / 4);
   scene.addChild(light1);

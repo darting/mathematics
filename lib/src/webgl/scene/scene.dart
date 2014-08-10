@@ -5,7 +5,7 @@ part of mathematics;
 
 class Scene extends GameObject {
 
-  final List<RenderTargetTexture> renderTargets = [];
+  final List<Camera> renderTargets = [];
   final List<Camera> cameras = [];
   final List<Light> lights = [];
   final Map<String, Object> dataProvider = {};
@@ -13,6 +13,13 @@ class Scene extends GameObject {
   Camera get mainCamera => cameras.firstWhere((c) => c.enabled);
 
   DrawCallPool _drawCalls = new DrawCallPool();
+  
+  final WorldRenderer worldRenderer = new WorldRenderer();
+  final List<Renderer> renderer = [];
+  final List<GameObject> opaqueObjectes = [];
+  final List<GameObject> alphaTestObjectes = [];
+  final List<GameObject> transparentObjectes = [];
+  
   
   Color ambientColor = Color.white();
 
@@ -28,12 +35,16 @@ class Scene extends GameObject {
     object.updateRoot(this);
   }
 
-  void _registerRenderer(Renderer renderer) {
+  void _registerRenderer(Surface renderer) {
     _drawCalls.register(renderer);
+    
+    opaqueObjectes.add(renderer.entity);
   }
 
-  void _unregisterRenderer(Renderer renderer) {
+  void _unregisterRenderer(Surface renderer) {
     _drawCalls.unregister(renderer);
+    
+    opaqueObjectes.remove(renderer.entity);
   }
 
   void _updateGameObject(GameObject entity) {
@@ -48,18 +59,24 @@ class Scene extends GameObject {
 
     var graphics = Engine._sharedInstance._graphics;
 
-//    renderTargets.forEach((renderTarget) => _drawCalls.render(graphics, camera));
+    //renderTargets.forEach((renderTarget) => _drawCalls.render(graphics, renderTarget));
 
     if (renderTargets.length > 0) graphics.restoreDefaultFramebuffer();
 
-    var camera = mainCamera;
-    graphics.clear(camera.backgroundColor);
-    _drawCalls.render(graphics, camera);
+    worldRenderer.render(graphics, mainCamera, this);
+    
+//    var camera = mainCamera;
+//    graphics.clear(camera.backgroundColor);
+    //_drawCalls.render(graphics, camera);
+    
+//    opaqueObjectes.forEach((GameObject entity){
+//      entity.surface.sharedMaterials.forEach((m) => _render(graphics, camera, m, [entity]));
+//    });
   }
 
   void addCamera(Camera camera) {
     if (camera.renderTargetTexture != null) {
-      renderTargets.add(camera.renderTargetTexture);
+      renderTargets.add(camera);
     } else {
       cameras.add(camera);
     }
@@ -72,6 +89,7 @@ class Scene extends GameObject {
       cameras.remove(camera);
     }
   }
+  
 }
 
 

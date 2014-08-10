@@ -21,7 +21,7 @@ part 'src/webgl/loader/obj_loader.dart';
 
 part 'src/webgl/component/component.dart';
 part 'src/webgl/component/camera.dart';
-part 'src/webgl/component/renderer.dart';
+part 'src/webgl/component/surface.dart';
 part 'src/webgl/component/transform.dart';
 part 'src/webgl/component/perspective_camera.dart';
 part 'src/webgl/component/mesh_instance.dart';
@@ -63,6 +63,9 @@ part 'src/webgl/render/pass.dart';
 part 'src/webgl/render/vertex_buffer.dart';
 part 'src/webgl/render/draw_call.dart';
 part 'src/webgl/render/draw_call_pool.dart';
+
+part 'src/webgl/render/renderer.dart';
+part 'src/webgl/render/shadow_renderer.dart';
 
 // not finish yet
 part 'src/webgl/render/draw_call_backup.dart';

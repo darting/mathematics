@@ -33,7 +33,7 @@ class PhongMaterial extends Material {
   }
 
   @override
-  bool ready(GraphicsDevice graphics, Renderer renderer) {
+  bool ready(GraphicsDevice graphics, Surface renderer) {
     _definesBuff.clear();
 
     if (diffuseTexture != null) {
@@ -75,7 +75,7 @@ class PhongMaterial extends Material {
     var scene = entity.scene;
 
     if (ambientColor != null) graphics.uniformColor3("uAmbientColor", ambientColor * scene.ambientColor);
-    if (diffuseColor != null) graphics.uniformFloat4("uDiffuseColor", diffuseColor.red, diffuseColor.green, diffuseColor.blue, diffuseColor.alpha * entity.renderer.visibility);
+    if (diffuseColor != null) graphics.uniformFloat4("uDiffuseColor", diffuseColor.red, diffuseColor.green, diffuseColor.blue, diffuseColor.alpha * entity.surface.visibility);
     if (emissiveColor != null) graphics.uniformColor3("uEmissiveColor", emissiveColor);
     if (specularColor != null) graphics.uniformFloat4("uSpecularColor", specularColor.red, specularColor.green, specularColor.blue, specularPower);
 

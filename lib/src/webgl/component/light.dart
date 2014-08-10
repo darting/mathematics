@@ -17,11 +17,23 @@ abstract class Light extends Component {
 
   Texture cookie;
   
+  Camera _shadowCamera;
   int _shadows = SHADOW_NONE;
   int get shadows => _shadows;
   void set shadows(int val) {
+    if(_shadows == val) return;
     _shadows = val;
-    
+    if(_shadows == SHADOW_NONE) {
+      if(entity != null && entity.scene != null) {
+        entity.scene.removeCamera(_shadowCamera);
+      }
+    } else {
+      _shadowCamera = new PerspectiveCamera(1.0, fov: 90.0, near: 0.1, far: 100.0);
+      _shadowCamera.renderTargetTexture = new RenderTargetTexture(id)..width=512..height=512;
+      if(entity != null && entity.scene != null) {
+        entity.scene.addCamera(_shadowCamera);
+      }
+    }
   }
   
   double darkness;
@@ -35,8 +47,14 @@ abstract class Light extends Component {
   @override
   _entityAdded(GameObject entity) {
     super._entityAdded(entity);
-    _addToScene = entity.on("addToScene").listen((_) => entity.scene.lights.add(this));
-    _removeFromScene = entity.on("removeFromScene").listen((_) => entity.scene.lights.remove(this));
+    _addToScene = entity.on("addToScene").listen((_) {
+      entity.scene.lights.add(this);
+      if(_shadowCamera != null) entity.scene.addCamera(_shadowCamera);
+    });
+    _removeFromScene = entity.on("removeFromScene").listen((_) {
+      entity.scene.lights.remove(this);
+      if(_shadowCamera != null) entity.scene.removeCamera(_shadowCamera);
+    });
   }
 
   @override

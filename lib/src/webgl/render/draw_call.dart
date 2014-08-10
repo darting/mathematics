@@ -5,7 +5,7 @@ part of mathematics;
 
 class DrawCall {
 
-  Renderer _renderer;
+  Surface _renderer;
   List<GameObject> _entities = [];
 
   DrawCall(this._renderer);

@@ -8,9 +8,11 @@ class RenderTargetTexture extends Texture {
   gl.Renderbuffer depthBuffer;
   gl.Framebuffer framebuffer;
   
+  bool generateDepthBuffer = true;
+  
   RenderTargetTexture(String id) : super._(id);
 
-  void prepare(GraphicsDevice graphics, {bool generateDepthBuffer: true}) {
+  void prepare(GraphicsDevice graphics) {
     
     if(_ready) return;
     

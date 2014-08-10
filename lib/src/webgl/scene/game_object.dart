@@ -10,8 +10,8 @@ class GameObject extends Node {
 
   bool isStatic = false;
 
-  Renderer _renderer;
-  Renderer get renderer => _renderer;
+  Surface _surface;
+  Surface get surface => _surface;
 
   MeshInstance _meshInstance;
   MeshInstance get meshInstance => _meshInstance;
@@ -47,8 +47,8 @@ class GameObject extends Node {
   }
 
   void _setSpecialComponent(Component component, value) {
-    if (component is Renderer) {
-      _renderer = value;
+    if (component is Surface) {
+      _surface = value;
     } else if (component is MeshInstance) {
       _meshInstance = value;
     } else if (component is Transform) {
