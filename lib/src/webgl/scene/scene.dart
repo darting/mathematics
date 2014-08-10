@@ -5,7 +5,7 @@ part of mathematics;
 
 class Scene extends GameObject {
 
-  final List<Camera> renderTargets = [];
+  final Map<Camera, Renderer> renderTargets = {};
   final List<Camera> cameras = [];
   final List<Light> lights = [];
   final Map<String, Object> dataProvider = {};
@@ -14,11 +14,11 @@ class Scene extends GameObject {
 
   DrawCallPool _drawCalls = new DrawCallPool();
   
-  final WorldRenderer worldRenderer = new WorldRenderer();
+  WorldRenderer _worldRenderer = new WorldRenderer();
   final List<Renderer> renderer = [];
-  final List<GameObject> opaqueObjectes = [];
-  final List<GameObject> alphaTestObjectes = [];
-  final List<GameObject> transparentObjectes = [];
+  final List<GameObject> opaqueRenderables = [];
+  final List<GameObject> alphaTestRenderables = [];
+  final List<GameObject> transparentRenderables = [];
   
   
   Color ambientColor = Color.white();
@@ -38,13 +38,13 @@ class Scene extends GameObject {
   void _registerRenderer(Surface renderer) {
     _drawCalls.register(renderer);
     
-    opaqueObjectes.add(renderer.entity);
+    opaqueRenderables.add(renderer.entity);
   }
 
   void _unregisterRenderer(Surface renderer) {
     _drawCalls.unregister(renderer);
     
-    opaqueObjectes.remove(renderer.entity);
+    opaqueRenderables.remove(renderer.entity);
   }
 
   void _updateGameObject(GameObject entity) {
@@ -63,7 +63,7 @@ class Scene extends GameObject {
 
     if (renderTargets.length > 0) graphics.restoreDefaultFramebuffer();
 
-    worldRenderer.render(graphics, mainCamera, this);
+    _worldRenderer.render(graphics, mainCamera, this);
     
 //    var camera = mainCamera;
 //    graphics.clear(camera.backgroundColor);
@@ -76,7 +76,7 @@ class Scene extends GameObject {
 
   void addCamera(Camera camera) {
     if (camera.renderTargetTexture != null) {
-      renderTargets.add(camera);
+      renderTargets[camera] = c;
     } else {
       cameras.add(camera);
     }

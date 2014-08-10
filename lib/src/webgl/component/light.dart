@@ -23,51 +23,48 @@ abstract class Light extends Component {
   void set shadows(int val) {
     if(_shadows == val) return;
     _shadows = val;
-    if(_shadows == SHADOW_NONE) {
-      if(entity != null && entity.scene != null) {
-        entity.scene.removeCamera(_shadowCamera);
-      }
-    } else {
+    _ensureShadows();
+  }
+
+  void _ensureShadows() {
+    if(_shadows == SHADOW_NONE && _shadowCamera != null) {
+      entity.removeComponent(_shadowCamera);
+    } else if(_shadows != SHADOW_NONE && _shadowCamera == null) {
       _shadowCamera = new PerspectiveCamera(1.0, fov: 90.0, near: 0.1, far: 100.0);
       _shadowCamera.renderTargetTexture = new RenderTargetTexture(id)..width=512..height=512;
-      if(entity != null && entity.scene != null) {
-        entity.scene.addCamera(_shadowCamera);
+      if(entity != null) {
+        entity.addComponent(_shadowCamera);
       }
     }
   }
   
-  double darkness;
+  double darkness = 1.0;
   double shadowBias = 0.2;
   
   int resolution;
 
-  StreamSubscription _addToScene;
-  StreamSubscription _removeFromScene;
-
   @override
   _entityAdded(GameObject entity) {
     super._entityAdded(entity);
-    _addToScene = entity.on("addToScene").listen((_) {
+    _ensureShadows();
+    if(entity.root is Scene) {
       entity.scene.lights.add(this);
-      if(_shadowCamera != null) entity.scene.addCamera(_shadowCamera);
-    });
-    _removeFromScene = entity.on("removeFromScene").listen((_) {
-      entity.scene.lights.remove(this);
-      if(_shadowCamera != null) entity.scene.removeCamera(_shadowCamera);
-    });
+    }
   }
 
   @override
   void _entityRemoved(GameObject entity) {
     super._entityRemoved(entity);
-    if (_addToScene != null) {
-      _addToScene.cancel();
-      _addToScene = null;
-    }
-    if (_removeFromScene != null) {
-      _removeFromScene.cancel();
-      _removeFromScene = null;
-    }
+  }
+  
+  @override 
+  void _addedToScene(Scene scene) {
+    entity.scene.lights.add(this);
+  }
+  
+  @override
+  void _removedFromScene() {
+    entity.scene.lights.remove(this);
   }
 
   void bind(GraphicsDevice graphics, int lightIndex);

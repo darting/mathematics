@@ -20,7 +20,7 @@ abstract class Node extends EventTrigger implements Disposable {
     child.root = root == null ? this : root;
     child.parent = this;
     child.on("addToParent").dispatch(this);
-    if(root is Scene) child.on("addToScene").dispatch(this);
+    if(root is Scene) child._addedToScene();
   }
 
   void removeFromParent() {
@@ -47,9 +47,17 @@ abstract class Node extends EventTrigger implements Disposable {
     child.root = null;
     child.parent = null;
     child.on("removeFromParent").dispatch(this);
-    if (root is Scene) child.on("removeFromScene").dispatch(this);
+    if (root is Scene) child._removedFromScene();
   }
 
+  void _addedToScene() {
+    on("addToScene").dispatch(this);
+  }
+  
+  void _removedFromScene() {
+    on("removeFromScene").dispatch(this);
+  }
+  
   bool contains(Node child) {
     if (_children != null) return _children.contains(child);
     return false;

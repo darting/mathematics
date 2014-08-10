@@ -65,7 +65,7 @@ part 'src/webgl/render/draw_call.dart';
 part 'src/webgl/render/draw_call_pool.dart';
 
 part 'src/webgl/render/renderer.dart';
-part 'src/webgl/render/shadow_renderer.dart';
+part 'src/webgl/render/shadow_mapping_renderer.dart';
 
 // not finish yet
 part 'src/webgl/render/draw_call_backup.dart';

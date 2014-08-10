@@ -58,6 +58,11 @@ class GraphicsDevice {
     }
   }
   
+  void bindFramebuffer(RenderTargetTexture renderTarget) {
+    _ctx.bindFramebuffer(gl.FRAMEBUFFER, renderTarget.framebuffer);
+    _ctx.viewport(0, 0, renderTarget.width, renderTarget.height);
+  }
+  
   void restoreDefaultFramebuffer() {
     _ctx.bindFramebuffer(gl.FRAMEBUFFER, null);
     _ctx.viewport(_viewport.left, _viewport.right, _viewport.width, _viewport.height);

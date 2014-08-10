@@ -16,7 +16,7 @@ class WorldRenderer implements Renderer {
   void render(GraphicsDevice graphics, Camera camera, Scene scene) {
     graphics.clear(camera.backgroundColor);
     
-    scene.opaqueObjectes.forEach((GameObject entity) {
+    scene.opaqueRenderables.forEach((GameObject entity) {
       entity.surface.sharedMaterials.forEach((m) => _draw(graphics, camera, m, entity));
     });
   }

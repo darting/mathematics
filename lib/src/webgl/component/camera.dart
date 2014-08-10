@@ -17,8 +17,6 @@ abstract class Camera extends Component {
   Vector3 upVector = WORLD_UP;
 
   StreamSubscription _worldMatrixChanged;
-  StreamSubscription _addToScene;
-  StreamSubscription _removeFromScene;
 
   Camera() {
     _view = new Matrix4.zero();
@@ -42,17 +40,26 @@ abstract class Camera extends Component {
       _view.invert();
       _viewProjection = _projection * _view;
     });
-    _addToScene = entity.on("addToScene").listen((_) {
+
+    if(entity.root is Scene) {
       entity.scene.addCamera(this);
-    });
-    _removeFromScene = entity.on("removeFromScene").listen((_) {
-      entity.scene.removeCamera(this);
-    });
+    }
   }
 
   @override
   void _entityRemoved(GameObject entity) {
+    if(entity.scene != null) entity.scene.removeCamera(this);
     _cleanup();
+  }
+  
+  @override 
+  void _addedToScene(Scene scene) {
+    entity.scene.addCamera(this);
+  }
+  
+  @override
+  void _removedFromScene() {
+    Engine._sharedInstance.scene.removeCamera(this);
   }
 
   @override
@@ -64,14 +71,6 @@ abstract class Camera extends Component {
     if (_worldMatrixChanged != null) {
       _worldMatrixChanged.cancel();
       _worldMatrixChanged = null;
-    }
-    if (_addToScene != null) {
-      _addToScene.cancel();
-      _addToScene = null;
-    }
-    if (_removeFromScene != null) {
-      _removeFromScene.cancel();
-      _removeFromScene = null;
     }
   }
 

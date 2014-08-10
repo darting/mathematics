@@ -30,6 +30,18 @@ class GameObject extends Node {
   GameObject(String uniqueId)
       : components = [],
         super(uniqueId);
+  
+  @override
+  void _addedToScene() {
+    super._addedToScene();
+    components.forEach((c) => c._addedToScene(scene));
+  }
+  
+  @override
+  void _removedFromScene() {
+    super._removedFromScene();
+    components.forEach((c) => c._removedFromScene());
+  }
 
   void addComponent(Component component) {
     _setSpecialComponent(component, component);

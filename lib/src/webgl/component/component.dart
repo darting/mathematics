@@ -31,5 +31,8 @@ abstract class Component implements Disposable {
   void _entityAdded(GameObject entity) {}
   void _entityRemoved(GameObject entity) {}
 
+  void _addedToScene(Scene scene) {}
+  void _removedFromScene() {}
+  
   void dispose() {}
 }

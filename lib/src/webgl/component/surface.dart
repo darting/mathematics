@@ -21,9 +21,6 @@ class Surface extends Component {
 
   bool receiveShadows;
 
-  StreamSubscription _addToScene;
-  StreamSubscription _removeFromScene;
-
   Surface({Material material, this.sharedMaterials}) {
     if (material == null && sharedMaterials == null) {
       sharedMaterials = [new BasicMaterial()];
@@ -34,16 +31,21 @@ class Surface extends Component {
 
   @override
   void _entityAdded(GameObject entity) {
-    _addToScene = entity.on("addToScene").listen((_) {
-      entity.scene._registerRenderer(this);
-    });
-    _removeFromScene = entity.on("removeFromScene").listen((_) {
-      _cleanup();
-    });
+
   }
 
   @override
   void _entityRemoved(GameObject entity) {
+    _cleanup();
+  }
+  
+  @override 
+  void _addedToScene(Scene scene) {
+    entity.scene._registerRenderer(this);
+  }
+  
+  @override
+  void _removedFromScene() {
     _cleanup();
   }
 
@@ -52,8 +54,6 @@ class Surface extends Component {
   }
 
   void _cleanup() {
-    if (_addToScene != null) _addToScene.cancel();
-    if (_removeFromScene != null) _removeFromScene.cancel();
     Engine._sharedInstance.scene._unregisterRenderer(this);
   }
 }
