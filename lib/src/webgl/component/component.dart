@@ -14,7 +14,10 @@ abstract class Component implements Disposable {
   List<GameObject> _entities = [];
   List<GameObject> get entities => _entities;
   GameObject getEntity(int i) => _entities[i];
-  GameObject get entity => _entities.first;
+  GameObject get entity {
+    if (_entities.length == 0) return null;
+    return _entities.first;
+  }
 
   bool _enabled = true;
   void set enabled(bool val) {

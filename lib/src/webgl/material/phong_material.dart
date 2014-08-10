@@ -42,6 +42,7 @@ class PhongMaterial extends Material {
     }
 
     var scene = Engine._sharedInstance.scene;
+    var shadowActivated = false;
     for (var i = 0; i < scene.lights.length && i < Light.MAX_LIGHTS; i++) {
       _definesBuff.writeln("#define LIGHT$i");
       var light = scene.lights[i];
@@ -51,6 +52,23 @@ class PhongMaterial extends Material {
         _definesBuff.writeln("#define HEMILIGHT$i");
       } else {
         _definesBuff.writeln("#define POINTDIRLIGHT$i");
+      }
+      // shadows
+      if(surface.receiveShadows && light.shadows != Light.SHADOW_NONE) {
+
+        var shadow = light._shadowMapping.renderTarget as ShadowMapping;
+        shadow.prepare(graphics);
+
+        if(!shadow.ready) return false;
+
+        if(!shadowActivated) {
+          shadowActivated = true;
+          _definesBuff.writeln("#define SHADOWS");
+        }
+        _definesBuff.writeln("#define SHADOW${i}");
+        if(light.shadows == Light.SHADOW_SOFT_VSM) {
+          _definesBuff.writeln("#define SHADOWVSM${i}");
+        }
       }
     }
 
@@ -89,6 +107,13 @@ class PhongMaterial extends Material {
       var intensity = light.intensity;
       graphics.uniformFloat4("uLightDiffuse${i}", color.red * intensity, color.green * intensity, color.blue * intensity, light.range);
       graphics.uniformColor3("uLightSpecular${i}", light.specularColor.clone().scale(light.intensity));
+
+      if(entity.surface.receiveShadows && light.shadows != Light.SHADOW_NONE) {
+        graphics.uniformMatrix4("lightMatrix${i}", light._shadowMapping.viewProjection);
+        graphics.bindTexture("shadowSampler$i", light._shadowMapping.renderTarget);
+        if(light.shadows == Light.SHADOW_HARD)
+          graphics.uniformFloat("darkness$i", light.darkness);
+      }
     }
 
     graphics.uniformVector3("uEyePosition", camera.entity.transform.worldPosition);

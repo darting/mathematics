@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-abstract class Renderer {
+abstract class Renderer implements Disposable {
 
   void render(GraphicsDevice graphics, Camera camera, Scene scene);
 
@@ -14,6 +14,7 @@ class WorldRenderer implements Renderer {
 
   @override
   void render(GraphicsDevice graphics, Camera camera, Scene scene) {
+
     graphics.clear(camera.backgroundColor);
     
     scene.opaqueRenderables.forEach((GameObject entity) {
@@ -34,5 +35,10 @@ class WorldRenderer implements Renderer {
         graphics.drawTriangles(subMesh._indices);
       });
     }
+  }
+
+  @override
+  void dispose() {
+
   }
 }

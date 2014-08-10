@@ -5,7 +5,7 @@ part of mathematics;
 
 class Scene extends GameObject {
 
-  final Map<Camera, Renderer> renderTargets = {};
+  final List<Camera> renderTargets = [];
   final List<Camera> cameras = [];
   final List<Light> lights = [];
   final Map<String, Object> dataProvider = {};
@@ -59,7 +59,7 @@ class Scene extends GameObject {
 
     var graphics = Engine._sharedInstance._graphics;
 
-    //renderTargets.forEach((renderTarget) => _drawCalls.render(graphics, renderTarget));
+    renderTargets.forEach((Camera camera) => camera.renderTarget.render(graphics, camera, this));
 
     if (renderTargets.length > 0) graphics.restoreDefaultFramebuffer();
 
@@ -68,22 +68,20 @@ class Scene extends GameObject {
 //    var camera = mainCamera;
 //    graphics.clear(camera.backgroundColor);
     //_drawCalls.render(graphics, camera);
-    
-//    opaqueObjectes.forEach((GameObject entity){
-//      entity.surface.sharedMaterials.forEach((m) => _render(graphics, camera, m, [entity]));
-//    });
+
   }
 
   void addCamera(Camera camera) {
-    if (camera.renderTargetTexture != null) {
-      renderTargets[camera] = c;
+    if(camera.renderTarget != null) {
+      renderTargets.add(camera);
     } else {
       cameras.add(camera);
     }
+
   }
 
   void removeCamera(Camera camera) {
-    if (camera.renderTargetTexture != null) {
+    if(camera.renderTarget != null) {
       renderTargets.remove(camera);
     } else {
       cameras.remove(camera);

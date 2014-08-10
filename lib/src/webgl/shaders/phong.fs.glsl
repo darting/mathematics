@@ -30,6 +30,11 @@ uniform vec3 uLightSpecular0;
   #ifdef HEMILIGHT0
     uniform vec3 uLightGround0;
   #endif
+  #ifdef SHADOW0
+    varying vec4 vPositionFromLight0;
+    uniform sampler2D shadowSampler0;
+    uniform float darkness0;
+  #endif
 #endif
 
 // light 1
@@ -42,6 +47,11 @@ uniform vec3 uLightSpecular1;
   #endif
   #ifdef HEMILIGHT1
     uniform vec3 uLightGround1;
+  #endif
+  #ifdef SHADOW1
+    varying vec4 vPositionFromLight1;
+    uniform sampler2D shadowSampler1;
+    uniform float darkness1;
   #endif
 #endif
 
@@ -56,6 +66,11 @@ uniform vec3 uLightSpecular2;
   #ifdef HEMILIGHT2
     uniform vec3 uLightGround2;
   #endif
+  #ifdef SHADOW2
+    varying vec4 vPositionFromLight2;
+    uniform sampler2D shadowSampler2;
+    uniform float darkness2;
+  #endif
 #endif
 
 // light 3
@@ -68,6 +83,11 @@ uniform vec3 uLightSpecular3;
   #endif
   #ifdef HEMILIGHT3
     uniform vec3 uLightGround3;
+  #endif
+  #ifdef SHADOW3
+    varying vec4 vPositionFromLight3;
+    uniform sampler2D shadowSampler3;
+    uniform float darkness3;
   #endif
 #endif
 
@@ -176,6 +196,60 @@ LightingInfo computeHemisphericLighting(vec3 viewDirection, vec3 normal, vec4 li
 
 
 
+// Shadows
+#ifdef SHADOWS
+
+float unpack(vec4 color) {
+  const vec4 bitShift = vec4(1. / (255. * 255. * 255.), 1. / (255. * 255.), 1. / 255., 1.);
+  return dot(color, bitShift);
+}
+
+float unpackHalf(vec2 color) {
+  return color.x + (color.y / 255.0);
+}
+
+float computeShadow(vec4 vPositionFromLight, sampler2D shadowSampler, float darkness) {
+  vec3 depth = vPositionFromLight.xyz / vPositionFromLight.w;
+  vec2 uv = 0.5 * depth.xy + vec2(0.5, 0.5);
+  if (uv.x < 0. || uv.x > 1.0 || uv.y < 0. || uv.y > 1.0) {
+    return 1.0;
+  }
+  float shadow = unpack(texture2D(shadowSampler, uv));
+  if (depth.z > shadow) {
+    return darkness;
+  }
+  return 1.0;
+}
+
+// Thanks to http://devmaster.net/
+float ChebychevInequality(vec2 moments, float t) {
+  if (t <= moments.x) {
+    return 1.0;
+  }
+
+  float variance = moments.y - (moments.x * moments.x);
+  variance = max(variance, 0.);
+
+  float d = t - moments.x;
+  return variance / (variance + d * d);
+}
+
+float computeShadowWithVSM(vec4 vPositionFromLight, sampler2D shadowSampler) {
+  vec3 depth = vPositionFromLight.xyz / vPositionFromLight.w;
+  vec2 uv = 0.5 * depth.xy + vec2(0.5, 0.5);
+
+  if (uv.x < 0. || uv.x > 1.0 || uv.y < 0. || uv.y > 1.0) {
+    return 1.0;
+  }
+
+  vec4 texel = texture2D(shadowSampler, uv);
+
+  vec2 moments = vec2(unpackHalf(texel.xy), unpackHalf(texel.zw));
+  return clamp(1.3 - ChebychevInequality(moments, depth.z), 0., 1.0);
+}
+#endif
+
+
 
 
 void main(void) {
@@ -236,6 +310,16 @@ void main(void) {
                                             shininess);
         #endif
 
+        #ifdef SHADOW0
+        #ifdef SHADOWVSM0
+          shadow = computeShadowWithVSM(vPositionFromLight0, shadowSampler0);
+        #else
+          shadow = computeShadow(vPositionFromLight0, shadowSampler0, darkness0);
+        #endif
+        #else
+          shadow = 1.0;
+        #endif
+
         diffuseBase += info.diffuse * shadow;
         specularBase += info.specular * shadow;
     #endif
@@ -273,6 +357,16 @@ void main(void) {
                             uLightSpecular1,
                             uLightDiffuse1.a, 
                             shininess);
+        #endif
+
+        #ifdef SHADOW1
+        #ifdef SHADOWVSM1
+          shadow = computeShadowWithVSM(vPositionFromLight1, shadowSampler1);
+        #else
+          shadow = computeShadow(vPositionFromLight1, shadowSampler1, darkness1);
+        #endif
+        #else
+          shadow = 1.0;
         #endif
 
         diffuseBase += info.diffuse * shadow;
@@ -313,6 +407,16 @@ void main(void) {
                             shininess);
         #endif
 
+        #ifdef SHADOW2
+        #ifdef SHADOWVSM2
+          shadow = computeShadowWithVSM(vPositionFromLight2, shadowSampler2);
+        #else
+          shadow = computeShadow(vPositionFromLight2, shadowSampler2, darkness2);
+        #endif
+        #else
+          shadow = 1.0;
+        #endif
+
         diffuseBase += info.diffuse * shadow;
         specularBase += info.specular * shadow;
     #endif
@@ -350,6 +454,16 @@ void main(void) {
                             uLightSpecular3,
                             uLightDiffuse3.a, 
                             shininess);
+        #endif
+
+        #ifdef SHADOW3
+        #ifdef SHADOWVSM3
+          shadow = computeShadowWithVSM(vPositionFromLight3, shadowSampler3);
+        #else
+          shadow = computeShadow(vPositionFromLight3, shadowSampler3, darkness3);
+        #endif
+        #else
+          shadow = 1.0;
         #endif
 
         diffuseBase += info.diffuse * shadow;

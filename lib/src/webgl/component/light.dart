@@ -16,8 +16,11 @@ abstract class Light extends Component {
   double range = double.MAX_FINITE;
 
   Texture cookie;
-  
-  Camera _shadowCamera;
+
+  Camera _shadowMapping;
+  double darkness = 1.0;
+  double shadowBias = 0.2;
+
   int _shadows = SHADOW_NONE;
   int get shadows => _shadows;
   void set shadows(int val) {
@@ -27,19 +30,18 @@ abstract class Light extends Component {
   }
 
   void _ensureShadows() {
-    if(_shadows == SHADOW_NONE && _shadowCamera != null) {
-      entity.removeComponent(_shadowCamera);
-    } else if(_shadows != SHADOW_NONE && _shadowCamera == null) {
-      _shadowCamera = new PerspectiveCamera(1.0, fov: 90.0, near: 0.1, far: 100.0);
-      _shadowCamera.renderTargetTexture = new RenderTargetTexture(id)..width=512..height=512;
+    if(_shadows == SHADOW_NONE && _shadowMapping != null) {
+      entity.removeComponent(_shadowMapping);
+    } else if(_shadows != SHADOW_NONE && _shadowMapping == null) {
+      _shadowMapping = new PerspectiveCamera(1.0, fov: 90.0, near: 0.1, far: 100.0);
+      _shadowMapping.renderTarget = new ShadowMapping();
+//      camera.renderTargetTexture = new RenderTargetTexture(id)..width=512..height=512;
+//      _shadowMapping = new ShadowMapping();
       if(entity != null) {
-        entity.addComponent(_shadowCamera);
+        entity.addComponent(_shadowMapping);
       }
     }
   }
-  
-  double darkness = 1.0;
-  double shadowBias = 0.2;
   
   int resolution;
 
@@ -117,6 +119,14 @@ class PointLight extends Light {
     var position = entity.transform.worldPosition;
     graphics.uniformFloat4("uLightData$lightIndex", position.x, position.y, position.z, 0.0);
   }
+
+  @override
+  int get shadows => Light.SHADOW_NONE;
+
+  @override
+  void set shadows(int val) {
+    throw new UnsupportedError("point light not support shadow");
+  }
 }
 
 
@@ -151,7 +161,15 @@ class HemisphericLight extends DirectionalLight {
   
   @override
   void worldMatrixChanged(Transform transform) {
-      direction.setValues(0.0, 1.0, 0.0);
-      transform.worldMatrix.rotateRef(direction);
-    }
+    direction.setValues(0.0, 1.0, 0.0);
+    transform.worldMatrix.rotateRef(direction);
+  }
+
+  @override
+  int get shadows => Light.SHADOW_NONE;
+
+  @override
+  void set shadows(int val) {
+    throw new UnsupportedError("hemispheric light not support shadow");
+  }
 }

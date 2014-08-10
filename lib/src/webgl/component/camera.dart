@@ -6,7 +6,8 @@ part of mathematics;
 abstract class Camera extends Component {
 
   Color backgroundColor = Color.black();
-  RenderTargetTexture renderTargetTexture;
+
+  Renderer renderTarget;
 
   Matrix4 _view;
   Matrix4 _projection;
@@ -60,6 +61,9 @@ abstract class Camera extends Component {
   @override
   void _removedFromScene() {
     Engine._sharedInstance.scene.removeCamera(this);
+    if(renderTarget != null) {
+      renderTarget.dispose();
+    }
   }
 
   @override

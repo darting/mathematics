@@ -54,7 +54,7 @@ void main() {
   cube
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("cube")))
-    ..addComponent(new Surface(material: new PhongMaterial()));
+    ..addComponent(new Surface(material: new PhongMaterial())..receiveShadows=true..castShadows=true);
   cube.transform.translate(0.0, -1.0, 0.0);
   scene.addChild(cube);
   
@@ -62,14 +62,14 @@ void main() {
   sphere
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("sphere")))
-  ..addComponent(new Surface(material: new PhongMaterial()));
+  ..addComponent(new Surface(material: new PhongMaterial())..receiveShadows=true..castShadows=true);
   scene.addChild(sphere);
 
   var plane = new GameObject("plane");
   plane
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("plane")))
-    ..addComponent(new Surface(material: new PhongMaterial()));
+    ..addComponent(new Surface(material: new PhongMaterial())..receiveShadows=true);
   plane.transform.translate(0.0, -1.5, 0.0);
   plane.transform.rotateX(-math.PI / 2);
   scene.addChild(plane);
@@ -80,7 +80,7 @@ void main() {
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
     ..addComponent(new Surface(material: new BasicMaterial(lightColor0)))
-    ..addComponent(new PointLight()..diffuseColor=lightColor0..specularColor=lightColor0..intensity=1.0);
+    ..addComponent(new PointLight()..diffuseColor=lightColor0..specularColor=lightColor0..intensity=0.5);
   light0.transform.translate(-1.0, 1.0, 1.0);
   scene.addChild(light0);
 
@@ -90,31 +90,31 @@ void main() {
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("light")))
     ..addComponent(new Surface(material: new BasicMaterial(lightColor1)))
-    ..addComponent(new DirectionalLight()..diffuseColor = lightColor1..specularColor = lightColor1..intensity=0.2);
+    ..addComponent(new DirectionalLight()..shadows=Light.SHADOW_SOFT_VSM..diffuseColor = lightColor1..specularColor = lightColor1..intensity=0.2);
   light1.transform.translate(1.0, 1.0, 2.0);
   light1.transform.rotateY(math.PI / 4);
   light1.transform.rotateZ(math.PI / 3);
   scene.addChild(light1);
   
-  var lightColor2 = new Color(1.0, 0.0, 0.0);
-  var light2 = new GameObject("light2");
-  light2
-    ..addComponent(new Transform())
-    ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Surface(material: new BasicMaterial(lightColor2)))
-    ..addComponent(new PointLight()..diffuseColor=lightColor2..specularColor=lightColor2..intensity=1.0);
-  light2.transform.translate(1.0, 1.0, 1.0);
-  scene.addChild(light2);
-  
-  var lightColor3 = new Color(0.0, 0.0, 1.0);
-  var light3 = new GameObject("light3");
-  light3
-    ..addComponent(new Transform())
-    ..addComponent(new MeshInstance(assets.getMesh("light")))
-    ..addComponent(new Surface(material: new BasicMaterial(lightColor3)))
-    ..addComponent(new PointLight()..diffuseColor=lightColor3..specularColor=lightColor3..intensity=1.0);
-  light3.transform.translate(0.0, 1.0, 1.0);
-  scene.addChild(light3);
+//  var lightColor2 = new Color(1.0, 0.0, 0.0);
+//  var light2 = new GameObject("light2");
+//  light2
+//    ..addComponent(new Transform())
+//    ..addComponent(new MeshInstance(assets.getMesh("light")))
+//    ..addComponent(new Surface(material: new BasicMaterial(lightColor2)))
+//    ..addComponent(new PointLight()..diffuseColor=lightColor2..specularColor=lightColor2..intensity=1.0);
+//  light2.transform.translate(1.0, 1.0, 1.0);
+//  scene.addChild(light2);
+//
+//  var lightColor3 = new Color(0.0, 0.0, 1.0);
+//  var light3 = new GameObject("light3");
+//  light3
+//    ..addComponent(new Transform())
+//    ..addComponent(new MeshInstance(assets.getMesh("light")))
+//    ..addComponent(new Surface(material: new BasicMaterial(lightColor3)))
+//    ..addComponent(new PointLight()..diffuseColor=lightColor3..specularColor=lightColor3..intensity=1.0);
+//  light3.transform.translate(0.0, 1.0, 1.0);
+//  scene.addChild(light3);
   
   
   
@@ -128,17 +128,17 @@ void main() {
     
 //    cube.transform.rotateY(engine.elapsedTime * 0.001);
     
-    light0.transform.setTranslation(math.cos(engine.totalTime / speed) * dist, 
-          0.0, 
-          math.sin(engine.totalTime / speed) * dist);
-    
-    light2.transform.setTranslation(math.sin(engine.totalTime / 700) * dist, 
-            0.0, 
-            math.cos(engine.totalTime / 700) * dist);
-    
-    light3.transform.setTranslation(math.sin(engine.totalTime / speed) * dist, 
-            math.cos(engine.totalTime / 500) * dist,
-            math.cos(engine.totalTime / speed) * dist);
+//    light0.transform.setTranslation(math.cos(engine.totalTime / speed) * dist,
+//          0.0,
+//          math.sin(engine.totalTime / speed) * dist);
+//
+//    light2.transform.setTranslation(math.sin(engine.totalTime / 700) * dist,
+//            0.0,
+//            math.cos(engine.totalTime / 700) * dist);
+//
+//    light3.transform.setTranslation(math.sin(engine.totalTime / speed) * dist,
+//            math.cos(engine.totalTime / 500) * dist,
+//            math.cos(engine.totalTime / speed) * dist);
     
   };
 

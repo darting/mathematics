@@ -20,7 +20,24 @@ attribute vec2 aUV;
 attribute vec2 aUV2;
 #endif
 
-
+#ifdef SHADOWS
+#ifdef LIGHT0
+uniform mat4 lightMatrix0;
+varying vec4 vPositionFromLight0;
+#endif
+#ifdef LIGHT1
+uniform mat4 lightMatrix1;
+varying vec4 vPositionFromLight1;
+#endif
+#ifdef LIGHT2
+uniform mat4 lightMatrix2;
+varying vec4 vPositionFromLight2;
+#endif
+#ifdef LIGHT3
+uniform mat4 lightMatrix3;
+varying vec4 vPositionFromLight3;
+#endif
+#endif
 
 varying vec3 vWorldPosition;
 varying vec3 vNormal;
@@ -35,9 +52,11 @@ mat3 getNormalMat(mat4 mat) {
 
 void main(void) {
     
-    vWorldPosition = (uModelMat * vec4(aPosition, 1.0)).xyz;
+    vec4 worldPos = (uModelMat * vec4(aPosition, 1.0));
+
+    vWorldPosition = worldPos.xyz;
     
-    gl_Position = uProjectionMat * uViewMat * vec4(vWorldPosition, 1.0);
+    gl_Position = uProjectionMat * uViewMat * worldPos;
 
     
     vec2 uv = vec2(0.0, 0.0);
@@ -53,4 +72,20 @@ void main(void) {
     #endif
 
     vNormal = normalize(vec3(uNormalMat * vec4(aNormal, 1.0)));
+
+    // Shadows
+    #ifdef SHADOWS
+    #ifdef LIGHT0
+      vPositionFromLight0 = lightMatrix0 * worldPos;
+    #endif
+    #ifdef LIGHT1
+      vPositionFromLight1 = lightMatrix1 * worldPos;
+    #endif
+    #ifdef LIGHT2
+      vPositionFromLight2 = lightMatrix2 * worldPos;
+    #endif
+    #ifdef LIGHT3
+      vPositionFromLight3 = lightMatrix3 * worldPos;
+    #endif
+    #endif
 }
