@@ -65,7 +65,7 @@ class GraphicsDevice {
   
   void restoreDefaultFramebuffer() {
     _ctx.bindFramebuffer(gl.FRAMEBUFFER, null);
-    _ctx.viewport(_viewport.left, _viewport.right, _viewport.width, _viewport.height);
+    _ctx.viewport(_viewport.left, _viewport.top, _viewport.width, _viewport.height);
   }
 
   // TODO

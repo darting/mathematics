@@ -18,7 +18,7 @@ abstract class Light extends Component {
   Texture cookie;
 
   Camera _shadowMapping;
-  double darkness = 1.0;
+  double darkness = 0.5;
   double shadowBias = 0.2;
 
   int _shadows = SHADOW_NONE;
@@ -32,14 +32,10 @@ abstract class Light extends Component {
   void _ensureShadows() {
     if(_shadows == SHADOW_NONE && _shadowMapping != null) {
       entity.removeComponent(_shadowMapping);
-    } else if(_shadows != SHADOW_NONE && _shadowMapping == null) {
+    } else if(entity != null && _shadows != SHADOW_NONE && _shadowMapping == null) {
       _shadowMapping = new PerspectiveCamera(1.0, fov: 90.0, near: 0.1, far: 100.0);
       _shadowMapping.renderTarget = new ShadowMapping();
-//      camera.renderTargetTexture = new RenderTargetTexture(id)..width=512..height=512;
-//      _shadowMapping = new ShadowMapping();
-      if(entity != null) {
-        entity.addComponent(_shadowMapping);
-      }
+      entity.addComponent(_shadowMapping);
     }
   }
   

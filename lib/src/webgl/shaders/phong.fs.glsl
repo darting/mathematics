@@ -208,12 +208,17 @@ float unpackHalf(vec2 color) {
   return color.x + (color.y / 255.0);
 }
 
+const float Near = 1.0;
+const float Far = 100.0;
+const float LinearDepthConstant = 1.0 / (Far - Near);
+
 float computeShadow(vec4 vPositionFromLight, sampler2D shadowSampler, float darkness) {
   vec3 depth = vPositionFromLight.xyz / vPositionFromLight.w;
   vec2 uv = 0.5 * depth.xy + vec2(0.5, 0.5);
   if (uv.x < 0. || uv.x > 1.0 || uv.y < 0. || uv.y > 1.0) {
     return 1.0;
   }
+  //depth.z = length(vWorldPosition - vPositionFromLight.xyz) * LinearDepthConstant * 0.96;
   float shadow = unpack(texture2D(shadowSampler, uv));
   if (depth.z > shadow) {
     return darkness;
@@ -245,7 +250,7 @@ float computeShadowWithVSM(vec4 vPositionFromLight, sampler2D shadowSampler) {
   vec4 texel = texture2D(shadowSampler, uv);
 
   vec2 moments = vec2(unpackHalf(texel.xy), unpackHalf(texel.zw));
-  return clamp(1.3 - ChebychevInequality(moments, depth.z), 0., 1.0);
+  return clamp(1.3 - ChebychevInequality(moments, depth.z), 0.0, 1.0);
 }
 #endif
 
@@ -311,11 +316,11 @@ void main(void) {
         #endif
 
         #ifdef SHADOW0
-        #ifdef SHADOWVSM0
-          shadow = computeShadowWithVSM(vPositionFromLight0, shadowSampler0);
-        #else
-          shadow = computeShadow(vPositionFromLight0, shadowSampler0, darkness0);
-        #endif
+            #ifdef SHADOWVSM0
+              shadow = computeShadowWithVSM(vPositionFromLight0, shadowSampler0);
+            #else
+              shadow = computeShadow(vPositionFromLight0, shadowSampler0, darkness0);
+            #endif
         #else
           shadow = 1.0;
         #endif
@@ -360,11 +365,11 @@ void main(void) {
         #endif
 
         #ifdef SHADOW1
-        #ifdef SHADOWVSM1
-          shadow = computeShadowWithVSM(vPositionFromLight1, shadowSampler1);
-        #else
-          shadow = computeShadow(vPositionFromLight1, shadowSampler1, darkness1);
-        #endif
+            #ifdef SHADOWVSM1
+              shadow = computeShadowWithVSM(vPositionFromLight1, shadowSampler1);
+            #else
+              shadow = computeShadow(vPositionFromLight1, shadowSampler1, darkness1);
+            #endif
         #else
           shadow = 1.0;
         #endif
@@ -478,6 +483,7 @@ void main(void) {
 
     
     gl_FragColor = vec4(finalDiffuse + finalSpecular, alpha);
+    // gl_FragColor = vec4(shadow, shadow, shadow, 1.0);
 }
 
 

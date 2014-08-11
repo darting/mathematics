@@ -5,7 +5,6 @@ part of mathematics;
 
 class ShadowMapping extends RenderTargetTexture implements Renderer {
 
-  RenderTargetTexture _renderTarget;
   Pass _pass;
   
   ShadowMapping() : super("shadow_mapping") {
@@ -27,9 +26,10 @@ class ShadowMapping extends RenderTargetTexture implements Renderer {
   @override
   void render(GraphicsDevice graphics, Camera camera, Scene scene) {
 
-    if(_pass == null || !_pass.ready) return;
+    if(!ready) return;
 
-    graphics.bindFramebuffer(_renderTarget);
+    graphics.use(_pass);
+    graphics.bindFramebuffer(this);
     graphics.clear(camera.backgroundColor);
     scene.opaqueRenderables.forEach((renderable) => _draw(graphics, camera, renderable));
   }
@@ -40,7 +40,6 @@ class ShadowMapping extends RenderTargetTexture implements Renderer {
 
     graphics.uniformMatrix4("world", renderable.transform.worldMatrix);
     graphics.uniformMatrix4("viewProjection", camera.viewProjection);
-    graphics.bindTexture("diffuseSampler", this);
     var mesh = renderable.meshInstance.mesh;
     mesh.vertices.enable(graphics, _pass.shader.attributes["position"]);
     mesh._subMeshes.forEach((subMesh) {

@@ -109,10 +109,16 @@ class PhongMaterial extends Material {
       graphics.uniformColor3("uLightSpecular${i}", light.specularColor.clone().scale(light.intensity));
 
       if(entity.surface.receiveShadows && light.shadows != Light.SHADOW_NONE) {
+
+
+//        var view = new Matrix4.identity().lookAt(light.entity.transform.worldPosition, light.entity.transform.worldPosition + (light as DirectionalLight).direction, WORLD_UP);
+//        var proj = new Matrix4.perspective(math.PI/2, 1.0, 0.01, 100.0);
+//        var mat = proj * view;
+
         graphics.uniformMatrix4("lightMatrix${i}", light._shadowMapping.viewProjection);
-        graphics.bindTexture("shadowSampler$i", light._shadowMapping.renderTarget);
+        graphics.bindTexture("shadowSampler${i}", light._shadowMapping.renderTarget);
         if(light.shadows == Light.SHADOW_HARD)
-          graphics.uniformFloat("darkness$i", light.darkness);
+          graphics.uniformFloat("darkness${i}", light.darkness);
       }
     }
 
