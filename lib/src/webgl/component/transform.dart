@@ -15,6 +15,9 @@ class Transform extends Component {
   Vector3 worldPosition;
   Matrix4 worldMatrix;
 
+  Vector3 target;
+  Vector3 upVector = WORLD_UP;
+
   Transform() {
     _position = new Vector3.zero();
     worldPosition = new Vector3.zero();
@@ -80,6 +83,21 @@ class Transform extends Component {
   applyMatrix(Matrix4 m) {
     _localMatrix.copyForm(m);
     _localMatrix.decompose(_position, _rotation, _scaling);
+    _localDirty = false;
+    _worldDirty = true;
+  }
+
+  Vector3 worldToLocal(Vector3 world) => worldMatrix.inverse() * world;
+
+  void lookAt(Vector3 center) {
+    if (target == null) target = new Vector3.zero();
+    target.copyFrom(center);
+    _localMatrix.lookAt(new Vector3.zero(), center, upVector);
+    _localMatrix.invert();
+    _localMatrix.scale(_scaling);
+    _localMatrix.setTranslation(_position);
+    _rotation.setFromRotation(_localMatrix);
+
     _localDirty = false;
     _worldDirty = true;
   }

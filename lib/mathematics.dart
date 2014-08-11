@@ -27,6 +27,7 @@ part 'src/webgl/component/perspective_camera.dart';
 part 'src/webgl/component/mesh_instance.dart';
 part 'src/webgl/component/light.dart';
 part 'src/webgl/component/shadow_mapping.dart';
+part 'src/webgl/component/behavior.dart';
 
 part 'src/webgl/scene/node.dart';
 part 'src/webgl/scene/game_object.dart';

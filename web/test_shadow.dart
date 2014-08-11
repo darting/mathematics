@@ -43,7 +43,7 @@ void main() {
   var camera = new GameObject("camera");
   camera
       ..addComponent(new Transform())
-      ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight));
+      ..addComponent(new PerspectiveCamera(canvas.clientWidth / canvas.clientHeight)..backgroundColor=new Color(0.5, 0.5, 0.5));
   camera.transform.translate(0.0, 1.5, 6.0);
   camera.camera.lookAt(new Vector3.zero());
   scene.addChild(camera);
@@ -102,7 +102,8 @@ void main() {
   plane2
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("plane")))
-  ..addComponent(new Surface(material: new BasicMaterial()));
+  ..addComponent(new Surface(material: new BasicMaterial()))
+  ..addComponent(new Billboard());
   plane2.transform.translate(-2.2, 1.5, 0.0);
   plane2.transform.scaling = new Vector3.all(0.5);
   scene.addChild(plane2);
@@ -139,7 +140,7 @@ void main() {
   var dist = 5.5;
   
   engine.enterFrame = () {
-//    camera.transform.translate(math.cos(engine.totalTime / speed) * 5.0, 1.0, math.sin(engine.totalTime / speed) * 5.0);
+//    camera.transform.setTranslation(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
 //    camera.camera.lookAt(new Vector3.zero());
 
 //    cube.transform.rotateY(engine.elapsedTime * 0.001);

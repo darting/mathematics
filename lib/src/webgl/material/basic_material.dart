@@ -52,8 +52,6 @@ class BasicMaterial extends Material {
     if(texture != null) {
       graphics.bindTexture("texture", texture);
       mesh.uv.enable(graphics, shader.attributes["aUV"]);
-    } else {
-
     }
     
     mesh.vertices.enable(graphics, shader.attributes["aPosition"]);

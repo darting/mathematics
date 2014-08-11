@@ -272,6 +272,8 @@ class Matrix4 {
     return this;
   }
 
+  setEntry(int row, int col, double v) { _elements[index(row, col)] = v; }
+
   /**
      * Generates a look-at matrix with the given eye position, focal point, and up axis
      * [eye] Position of the viewer
@@ -361,6 +363,12 @@ class Matrix4 {
     _elements[15] = 1.0;
 
     return this;
+  }
+
+  Matrix4 inverse() {
+    var m = clone();
+    m.invert();
+    return m;
   }
 
   double invert() {

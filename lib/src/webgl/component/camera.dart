@@ -49,7 +49,6 @@ abstract class Camera extends Component {
 
   @override
   void _entityRemoved(GameObject entity) {
-    if(entity.scene != null) entity.scene.removeCamera(this);
     _cleanup();
   }
   
@@ -60,10 +59,7 @@ abstract class Camera extends Component {
   
   @override
   void _removedFromScene() {
-    Engine._sharedInstance.scene.removeCamera(this);
-    if(renderTarget != null) {
-      renderTarget.dispose();
-    }
+    _cleanup();
   }
 
   @override
@@ -75,6 +71,10 @@ abstract class Camera extends Component {
     if (_worldMatrixChanged != null) {
       _worldMatrixChanged.cancel();
       _worldMatrixChanged = null;
+    }
+    Engine._sharedInstance.scene.removeCamera(this);
+    if(renderTarget != null) {
+      renderTarget.dispose();
     }
   }
 
