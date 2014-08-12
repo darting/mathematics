@@ -29,9 +29,7 @@ class Billboard extends Component {
   void update() {
     if(entity != null && entity.root is Scene && entity.transform != null) {
       var camera = facing == null ? entity.scene.mainCamera : facing;
-      var transform = entity.transform;
-      transform.lookAt(-camera.entity.transform.worldPosition);
-//      transform.lookAt(transform.worldToLocal(-camera.entity.transform.worldPosition));
+      entity.transform.lookAt(-camera.entity.transform.worldPosition);
     }
   }
 

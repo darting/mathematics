@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-class RenderTargetTexture extends Texture {
+class RenderTargetTexture extends Texture implements Renderer {
   
   gl.Renderbuffer depthBuffer;
   gl.Framebuffer framebuffer;
@@ -51,4 +51,10 @@ class RenderTargetTexture extends Texture {
     
     _ready = true;
   }
+
+  @override
+  void render(GraphicsDevice graphics, Camera camera, Scene scene) {
+
+  }
+
 }

@@ -4,6 +4,7 @@ part of mathematics;
 
 
 class GraphicsDevice {
+
   static const int SIZE_FLOAT = 4;
 
   static const int ALPHA_DISABLE = 0;
@@ -389,6 +390,16 @@ class GraphicsDevice {
     if (textureChannel < 0) return;
     _ctx.activeTexture(gl.TEXTURE0 + textureChannel);
     _ctx.bindTexture(texture.target, null);
+  }
+
+  void deleteTexture(Texture texture) {
+    _ctx.deleteTexture(texture);
+    if(texture is RenderTargetTexture) {
+      if(texture.depthBuffer != null)
+        _ctx.deleteRenderbuffer(texture.depthBuffer);
+      if(texture.framebuffer != null)
+        _ctx.deleteFramebuffer(texture.framebuffer);
+    }
   }
 }
 

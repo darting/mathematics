@@ -199,6 +199,8 @@ LightingInfo computeHemisphericLighting(vec3 viewDirection, vec3 normal, vec4 li
 // Shadows
 #ifdef SHADOWS
 
+
+
 float unpack(vec4 color) {
   const vec4 bitShift = vec4(1. / (255. * 255. * 255.), 1. / (255. * 255.), 1. / 255., 1.);
   return dot(color, bitShift);
@@ -214,11 +216,13 @@ const float LinearDepthConstant = 1.0 / (Far - Near);
 
 float computeShadow(vec4 vPositionFromLight, sampler2D shadowSampler, float darkness) {
   vec3 depth = vPositionFromLight.xyz / vPositionFromLight.w;
-  vec2 uv = 0.5 * depth.xy + vec2(0.5, 0.5);
+  
+  vec2 uv = depth.xy;// 0.5 * depth.xy + vec2(0.5, 0.5);
   if (uv.x < 0. || uv.x > 1.0 || uv.y < 0. || uv.y > 1.0) {
     return 1.0;
   }
-  //depth.z = length(vWorldPosition - vPositionFromLight.xyz) * LinearDepthConstant * 0.96;
+  //depth.z = length(-vPositionFromLight.xyz) * LinearDepthConstant * 0.96;
+  depth.z *= 0.94;
   float shadow = unpack(texture2D(shadowSampler, uv));
   if (depth.z > shadow) {
     return darkness;

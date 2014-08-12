@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-class Texture {
+class Texture implements Disposable {
   
   gl.Texture texture;
   String id;
@@ -31,4 +31,11 @@ class Texture {
   
   bool _ready = false;
   bool get ready => _ready;
+
+  @override
+  void dispose() {
+    if(texture != null) {
+       Engine._sharedInstance._graphics.deleteTexture(texture);
+    }
+  }
 }

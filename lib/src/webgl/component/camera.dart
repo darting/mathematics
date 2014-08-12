@@ -7,7 +7,7 @@ abstract class Camera extends Component {
 
   Color backgroundColor = Color.black();
 
-  Renderer renderTarget;
+  RenderTargetTexture renderTarget;
 
   Matrix4 _view;
   Matrix4 _projection;

@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-abstract class Renderer implements Disposable {
+abstract class Renderer {
 
   void render(GraphicsDevice graphics, Camera camera, Scene scene);
 
@@ -35,10 +35,5 @@ class WorldRenderer implements Renderer {
         graphics.drawTriangles(subMesh._indices);
       });
     }
-  }
-
-  @override
-  void dispose() {
-
   }
 }

@@ -54,7 +54,7 @@ void main() {
   cube
     ..addComponent(new Transform())
     ..addComponent(new MeshInstance(assets.getMesh("cube")))
-    ..addComponent(new Surface(material: new PhongMaterial())..receiveShadows=true..castShadows=true);
+    ..addComponent(new Surface(material: new PhongMaterial()..diffuseColor=new Color(0.0, 1.0, 1.0))..receiveShadows=true..castShadows=true);
   cube.transform.translate(0.0, -1.0, 0.0);
   scene.addChild(cube);
   
@@ -62,7 +62,7 @@ void main() {
   sphere
   ..addComponent(new Transform())
   ..addComponent(new MeshInstance(assets.getMesh("sphere")))
-  ..addComponent(new Surface(material: new PhongMaterial())..receiveShadows=true..castShadows=true);
+  ..addComponent(new Surface(material: new PhongMaterial()..diffuseColor=new Color(1.0, 0.0, 0.0))..receiveShadows=true..castShadows=true);
   scene.addChild(sphere);
 
   var plane = new GameObject("plane");
@@ -104,13 +104,12 @@ void main() {
   ..addComponent(new MeshInstance(assets.getMesh("plane")))
   ..addComponent(new Surface(material: new BasicMaterial()))
   ..addComponent(new Billboard());
-  plane2.transform.translate(-2.2, 1.5, 0.0);
+  plane2.transform.translate(-3.0, 1.5, 0.0);
   plane2.transform.scaling = new Vector3.all(0.5);
   scene.addChild(plane2);
 
 
-  var renderTarget = light1.camera.renderTarget as ShadowMapping;
-  (plane2.surface.sharedMaterial as BasicMaterial).texture = renderTarget;
+  (plane2.surface.sharedMaterial as BasicMaterial).texture = light1.camera.renderTarget;
 
   
 //  var lightColor2 = new Color(1.0, 0.0, 0.0);
@@ -140,8 +139,8 @@ void main() {
   var dist = 5.5;
   
   engine.enterFrame = () {
-//    camera.transform.setTranslation(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
-//    camera.camera.lookAt(new Vector3.zero());
+    camera.transform.setTranslation(math.cos(engine.totalTime / speed) * 5.0, 0.0, math.sin(engine.totalTime / speed) * 5.0);
+    camera.camera.lookAt(new Vector3.zero());
 
 //    cube.transform.rotateY(engine.elapsedTime * 0.001);
 

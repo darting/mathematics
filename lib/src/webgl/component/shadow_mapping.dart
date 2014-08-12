@@ -3,7 +3,7 @@ part of mathematics;
 
 
 
-class ShadowMapping extends RenderTargetTexture implements Renderer {
+class ShadowMapping extends RenderTargetTexture {
 
   Pass _pass;
   
@@ -52,6 +52,7 @@ class ShadowMapping extends RenderTargetTexture implements Renderer {
 
   @override
   void dispose() {
+    super.dispose();
     _pass.dispose();
   }
 
